@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
-import "./index.css";
+import "../index.css";
+import Header from "../Components/Header";
 
 const socket = io.connect("http://localhost:3001");
 
@@ -54,9 +55,7 @@ function JoinRoom() {
 
   return (
     <div className="bg-[#121636]">
-      <h1 className="text-blue-300 text-4xl font-chakra text-center p-3">
-        RohanChat.io
-      </h1>
+      <Header/>
       <div className="flex justify-between pt-[10px] px-4">
         <div className="p-3">
           <input

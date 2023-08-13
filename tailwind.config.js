@@ -8,6 +8,7 @@ module.exports = {
     extend: {},
     fontFamily:{
       "chakra":["Chakra Petch","sans-serif"],
+      "ostwald":["Oswald",'sans-serif'],
     }
   },
   plugins: [],
