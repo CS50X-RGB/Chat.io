@@ -3,6 +3,8 @@ import JoinRoom from './pages/joinRoom';
 import { Login } from './pages/Login';
 import { NotFound } from './pages/NotFound';
 import Home from './pages/Home';
+import Register from './pages/Register';
+import { Toaster } from 'react-hot-toast';
 
 export default function App() {
   return (
@@ -12,7 +14,9 @@ export default function App() {
       <Route path='/login' element={<Login/>}/>
       <Route path='/*' element={<NotFound/>}/>
       <Route path='/' element={<Home/>}/>
+      <Route path='/register' element={<Register/>}/>
     </Routes>
+    <Toaster/>
     </>
   )
 }
