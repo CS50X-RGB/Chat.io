@@ -2,13 +2,12 @@ import React, { useState } from "react";
 import Header from "../Components/Header";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { Toast, toast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 
 export default function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const handleNameChange = (e) => {
     setName(e.target.value);
   };
@@ -26,7 +25,7 @@ const handleRegister = async (e) => {
     
     try {
       const response = await axios.post(
-        'http://localhost:3001/api/v1.1/users/register',
+        `http://localhost:3001/api/v1.1/users/register`,
         {
           name,
           email,
@@ -39,18 +38,22 @@ const handleRegister = async (e) => {
           withCredentials: true,
         }
       );
-  
       const { data } = response;
-      toast.success(data.message);
+      toast.custom((t) => (
+        <div className="border-2 border-black  bg-gradient-to-tr from-green-500 via-green-600 to-green-700 text-black font-chakra p-3 rounded-md">
+          <strong>Sucess: </strong> {response.data.message}
+        </div>
+      ));   
+      localStorage.setItem("auth",true);  
     } catch (error) {
-      // Handle error, show toast message or handle the error response as needed
-      console.error('Error during registration:', error);
-      toast.error(error.response.data.message);
+      toast.custom((t) => (
+        <div className="border-2 border-white  bg-gradient-to-tr from-red-400  to-red-700 text-white font-chakra p-3 rounded-md"> 
+          <strong>Error:</strong> {error.response.data.message}
+        </div>
+      ));     
     }
   };
   
- 
- 
 return (
     <>
       <div className="bg-[#121636] shadow-xl shadow-black rounded-b-xl">
