@@ -14,10 +14,12 @@ export default function Header() {
       const response = await axios.get(
         `http://localhost:3001/api/v1.1/users/logout`,
         {
-          withCredentials: true,
+          headers :{
+            'Content-Type':'application/json',
+          },
+          withCredentials:true,
         }
       );
-      document.cookie = "auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
       toast.custom((t) => (
         <div className="border-2 border-black bg-gradient-to-tr from-green-500 via-green-600 to-green-700 text-black font-chakra p-3 rounded-md">
           <strong>Sucessfully Logged Out</strong>

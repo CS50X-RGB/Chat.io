@@ -38,6 +38,11 @@ export function Login() {
         `http://localhost:3001/api/v1.1/users/login`,{
           email: state.email,
           password: state.password
+        },{
+          headers : {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
         }
       );
       const { data } = response;
@@ -47,6 +52,7 @@ export function Login() {
         </div>
       ));
       localStorage.setItem("auth",true); 
+      console.log(localStorage.getItem("auth") === "true");
     } catch (error) {
       console.error("Error during login:", error);
       toast.custom((t) => (
