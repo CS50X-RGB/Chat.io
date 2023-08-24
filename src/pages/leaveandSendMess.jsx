@@ -63,9 +63,9 @@ function JoinRoom() {
           <input
             type="text"
             placeholder="Enter Room No.."
-            value={room1} // Use the room number from URL as the default value
+            value={room1}
             readOnly
-            className="text-blue-700 p-3 rounded-l-lg focus:bg-blue-300 font-chakra"
+            className="text-blue-700 flex flex-row justify-center items-center  p-3 rounded-l-lg focus:bg-blue-300 font-chakra"
           />
         </div>
       </div>
