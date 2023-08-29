@@ -1,5 +1,8 @@
 import React, { useReducer } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../features/cart/authSlice";
+import { useNavigate } from "react-router-dom";
 import Header from "../Components/Header";
 import axios from "axios";
 import { toast } from "react-hot-toast";
@@ -16,47 +19,54 @@ function reducer(state, action) {
 }
 
 export function Login() {
+  const dispatch = useDispatch();
+  const { isAuth } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
   const initialState = {
     email: "",
-    password: ""
+    password: "",
   };
 
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatchReducer] = useReducer(reducer, initialState);
 
   const handleEmailChange = (e) => {
-    dispatch({ type: "setEmail", payload: e.target.value });
+    dispatchReducer({ type: "setEmail", payload: e.target.value });
   };
 
   const handlePasswordChange = (e) => {
-    dispatch({ type: "setPassword", payload: e.target.value });
+    dispatchReducer({ type: "setPassword", payload: e.target.value });
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `http://localhost:3001/api/v1.1/users/login`,{
+        `http://localhost:3001/api/v1.1/users/login`,
+        {
           email: state.email,
-          password: state.password
-        },{
-          headers : {
+          password: state.password,
+        },
+        {
+          headers: {
             "Content-Type": "application/json",
           },
           withCredentials: true,
         }
       );
-      const { data } = response;
-      toast.custom((t) => (
-        <div className="border-2 border-black  bg-gradient-to-tr from-green-500 via-green-600 to-green-700 text-black font-chakra p-3 rounded-md">
-          <strong>Sucess: </strong> {response.data.message}
-        </div>
-      ));
-      localStorage.setItem("auth",true); 
-      console.log(localStorage.getItem("auth") === "true");
+      if (response && response.data) {
+        toast.custom((t) => (
+          <div className="border-2 border-black bg-gradient-to-tr from-green-500 via-green-600 to-green-700 text-black font-chakra p-3 rounded-md">
+            <strong>Success: </strong> {response.data.message}
+          </div>
+        ));
+        dispatch(login());
+        console.log(isAuth);
+        navigate("/myProfile");
+      }
     } catch (error) {
       console.error("Error during login:", error);
       toast.custom((t) => (
-        <div className="border-2 border-white  bg-gradient-to-tr from-red-400 via-red-500 to-red-700 text-white font-chakra p-3 rounded-md">
+        <div className="border-2 border-white bg-gradient-to-tr from-red-400 via-red-500 to-red-700 text-white font-chakra p-3 rounded-md">
           <strong>Error:</strong> {error.response.data.message}
         </div>
       ));
@@ -67,7 +77,10 @@ export function Login() {
     <>
       <div className="bg-[#121636] shadow-xl shadow-black rounded-b-xl">
         <Header />
-        <form className="justify-center flex flex-col gap-3 py-5 items-center" onSubmit={handleLogin}>
+        <form
+          className="justify-center flex flex-col gap-3 py-5 items-center"
+          onSubmit={handleLogin}
+        >
           <input
             type="email"
             placeholder="Your Email"
@@ -98,3 +111,5 @@ export function Login() {
     </>
   );
 }
+
+export default Login;

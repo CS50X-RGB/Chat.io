@@ -1,23 +1,25 @@
-import axios from "axios";
 import React, { useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux'; 
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { logout } from "../features/cart/authSlice"; 
 
-export default function Header() {
-  const auth = localStorage.getItem("auth") === "true";
-  const history = useNavigate(); 
-  console.log(auth);
+export default function Header(){
+  const { isAuth } = useSelector((state) => state.auth); 
+  const dispatch = useDispatch(); 
+  const history = useNavigate();
 
   const handleLogout = async () => {
     try {
       const response = await axios.get(
         `http://localhost:3001/api/v1.1/users/logout`,
         {
-          headers :{
-            'Content-Type':'application/json',
+          headers: {
+            'Content-Type': 'application/json',
           },
-          withCredentials:true,
+          withCredentials: true,
         }
       );
       toast.custom((t) => (
@@ -25,8 +27,8 @@ export default function Header() {
           <strong>Sucessfully Logged Out</strong>
         </div>
       ));
-      localStorage.removeItem("auth");
-      window.location.reload(); 
+      dispatch(logout());
+      window.location.reload();
     } catch (err) {
       toast.custom((t) => (
         <div className="border-2 border-white bg-gradient-to-tr from-red-400 via-red-500 to-red-700 text-white font-chakra p-3 rounded-md">
@@ -35,11 +37,13 @@ export default function Header() {
       ));
     }
   };
-  useEffect(()=>{
-    if(auth){
-      history('/');
+
+  useEffect(() => {
+    if (!isAuth) {
+      history('/'); // Redirect to home page if not authenticated
     }
-  },[auth,history])
+  }, [isAuth, history]);
+
   return (
     <div className="flex justify-between p-6">
       <h1 className="text-blue-500 text-4xl font-chakra text-center">
@@ -53,16 +57,16 @@ export default function Header() {
         >
           Register
         </Link>
-        {auth ? (
+        {isAuth ? (
           <>
-          <span
-            className="text-blue-500 bg-white font-chakra rounded-lg px-4 py-3 flex justify-center items-center hover:bg-blue-500 hover:text-white"
-            onClick={handleLogout} // Call the function here
-            style={{ cursor: "pointer" }}
-          >
-            Logout
-          </span>
-          </>         
+            <span
+              className="text-blue-500 bg-white font-chakra rounded-lg px-4 py-3 flex justify-center items-center hover:bg-blue-500 hover:text-white"
+              onClick={handleLogout}
+              style={{ cursor: "pointer" }}
+            >
+              Logout
+            </span>
+          </>
         ) : (
           <Link
             to="/login"

@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
+import { useSelector } from 'react-redux'; // Import useSelector
 import axios from "axios";
 import Header from "../Components/Header";
 
 export default function Profile() {
-  const [auth, setAuth] = useState(false);
   const [user, setUser] = useState(null);
+  const  isAuth  = useSelector((state) => state.auth.isAuth); 
 
   useEffect(() => {
-    const storedAuth = localStorage.getItem("auth") === "true";
-    setAuth(storedAuth);
-    if (storedAuth) {
+    if (isAuth) {
       axios
         .get("http://localhost:3001/api/v1.1/users/myProfile",{
           headers:{
@@ -19,19 +18,18 @@ export default function Profile() {
         })
         .then((response) => {
           setUser(response.data.user);
-          console.log(response.data.user.name + "Hi");
         })
         .catch((error) => {
           console.error("Error fetching user profile:", error);
         });
     }
-  }, []);
+  }, [isAuth]);
 
   return (
     <div className="bg-[#121636]">
       <Header/>
       <div className="text-white text-center">
-        {auth && user ? <p>Hi {user.name}</p> : <p>Welcome</p>}
+        {isAuth && user ? <p>Hi {user.name}</p> : <p>Welcome</p>}
       </div>
     </div>
   );

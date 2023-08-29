@@ -1,7 +1,8 @@
 import Header from "../Components/Header";
 import pic1 from "../assests/404.svg";
 import { Link } from "react-router-dom";
-export function NotFound() {
+
+export default function NotFound() {
   return (
     <>
       <div className="bg-[#121636]">

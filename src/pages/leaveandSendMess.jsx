@@ -6,19 +6,19 @@ import Header from "../Components/Header";
 
 const socket = io.connect("http://localhost:3001");
 
-function JoinRoom() {
+function LeaveRoomAndSendMessage() {
   const [message, setMessage] = useState("");
   const [messageReceived, setMessageReceived] = useState([]);
-  const [room1, setRoom] = useState("");
+  const [room, setRoom] = useState("");
   const [messageList, setMessageList] = useState([]);
-  const { room } = useParams();
+  const { room: roomParam } = useParams();
 
   useEffect(() => {
-    setRoom(room);
-    if (room !== "") {
-      socket.emit("join_room", room); // Automatically join the room using the room number from URL
+    setRoom(roomParam);
+    if (roomParam !== "") {
+      socket.emit("join_room", roomParam);
     }
-  }, [room]);
+  }, [roomParam]);
 
   const leaveRoom = () => {
     if (room !== "") {
@@ -55,24 +55,30 @@ function JoinRoom() {
     );
   }, [messageReceived]);
 
+  const isAuth = JSON.parse(localStorage.getItem("auth")) || false;
+
   return (
-    <div className="bg-[#121636]">
+    <div className="bg-[#121636] scroll-m-4 min-h-screen">
       <Header />
       <div className="pt-[10px] px-4">
-        <div className="p-3">
+        <div className="p-3 flex flex-row justify-between">
           <input
             type="text"
             placeholder="Enter Room No.."
-            value={room1}
+            value={room}
             readOnly
             className="text-blue-700 flex flex-row justify-center items-center  p-3 rounded-l-lg focus:bg-blue-300 font-chakra"
           />
+          <button
+            onClick={leaveRoom}
+            className="bg-[#1d54c9] text-white rounded-xl py-3 px-2 font-chakra"
+          >
+            Leave Room
+          </button>
         </div>
+        <div className="scroll-m-4 p-4">{messageList}</div>
       </div>
-      <div>
-        {messageList}
-      </div>
-      <div className="flex flex-row p-4 max-w-full">
+      <div className="fixed bottom-0 flex flex-row p-4 max-w-full">
         <input
           type="text"
           placeholder="Enter Message.."
@@ -80,21 +86,17 @@ function JoinRoom() {
           value={message}
           className="py-3 w-9/12 border-2 border-blue-300 text-blue-600 px-3 focus:bg-blue-300 rounded-l-xl font-chakra text-xl font-bold"
         />
-        <button
-          onClick={sendMessage}
-          className="bg-[#1d54c9] text-white rounded-r-xl px-3 font-chakra"
-        >
-          Send Message
-        </button>
-        <button
-          onClick={leaveRoom}
-          className="bg-[#1d54c9] text-white rounded-xl py-3 px-2 font-chakra"
-        >
-          Leave Room
-        </button>
+        {isAuth && (
+          <button
+            onClick={sendMessage}
+            className="bg-[#1d54c9] text-white rounded-r-xl px-3 font-chakra"
+          >
+            Send Message
+          </button>
+        )}
       </div>
     </div>
   );
 }
 
-export default JoinRoom;
+export default LeaveRoomAndSendMessage;
