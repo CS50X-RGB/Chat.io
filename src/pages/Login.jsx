@@ -75,6 +75,7 @@ export function Login() {
 
   return (
     <>
+    {console.log("I am called")}
       <div className="bg-[#121636] shadow-xl shadow-black rounded-b-xl">
         <Header />
         <form

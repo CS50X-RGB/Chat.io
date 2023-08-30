@@ -1,15 +1,34 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { toast } from "react-hot-toast";
 import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from 'react-redux'; 
-import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
-import { logout } from "../features/cart/authSlice"; 
+import { logout } from "../features/cart/authSlice";
+import { useEffect, useState } from "react";
 
-export default function Header(){
-  const { isAuth } = useSelector((state) => state.auth); 
-  const dispatch = useDispatch(); 
-  const history = useNavigate();
+export default function Header() {
+  const { isAuth } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    if (isAuth) {
+      axios
+        .get("http://localhost:3001/api/v1.1/users/myProfile", {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        })
+        .then((response) => {
+          setUserName(response.data.user.name);
+        })
+        .catch((error) => {
+          console.error("Error fetching user profile:", error);
+        });
+    }
+  }, [isAuth]);
 
   const handleLogout = async () => {
     try {
@@ -17,7 +36,7 @@ export default function Header(){
         `http://localhost:3001/api/v1.1/users/logout`,
         {
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           withCredentials: true,
         }
@@ -38,12 +57,6 @@ export default function Header(){
     }
   };
 
-  useEffect(() => {
-    if (!isAuth) {
-      history('/'); // Redirect to home page if not authenticated
-    }
-  }, [isAuth, history]);
-
   return (
     <div className="flex justify-between p-6">
       <h1 className="text-blue-500 text-4xl font-chakra text-center">
@@ -51,12 +64,24 @@ export default function Header(){
         <p className="text-sm text-start">Let's Chat</p>
       </h1>
       <div className="flex gap-4">
-        <Link
-          to="/register"
-          className="text-blue-800 bg-white font-chakra rounded-lg px-4 py-3 flex justify-center items-center hover:bg-blue-500 hover:text-white"
-        >
-          Register
-        </Link>
+        {isAuth ? (
+          <>
+            <h1 className="text-white font-chakra p-3">Weclome!! {userName.toString().toUpperCase()}</h1>
+            <Link
+              to="/myProfile"
+              className="text-blue-500 bg-white font-chakra rounded-lg px-4 py-3 flex justify-center items-center hover:bg-blue-500 hover:text-white"
+            >
+              My Profile
+            </Link>
+          </>
+        ) : (
+          <Link
+            to="/register"
+            className="text-blue-500 bg-white font-chakra rounded-lg px-4 py-3 flex justify-center items-center hover:bg-blue-500 hover:text-white"
+          >
+            Register
+          </Link>
+        )}
         {isAuth ? (
           <>
             <span
