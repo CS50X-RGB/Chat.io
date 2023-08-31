@@ -24,7 +24,7 @@ export default function App() {
             <Route path="/login" element={<Navigate to="/"/>} />
             <Route path="/register" element={<Navigate to="/"/>} />
             <Route path="/join" element={<JoinRoom />} />
-            <Route path="/chat/:room" element={<LeaveRoomAndSendMessage />} />
+            <Route path="/chat/:id/:room" element={<LeaveRoomAndSendMessage />} />
             <Route path="/myProfile" element={<Profile />} />
           </>
         ) : (

@@ -3,7 +3,7 @@ import io from "socket.io-client";
 import { useParams } from "react-router-dom";
 import "../index.css";
 import Header from "../Components/Header";
-
+import axios from "axios";
 const socket = io.connect("http://localhost:3001");
 
 function LeaveRoomAndSendMessage() {
@@ -11,8 +11,7 @@ function LeaveRoomAndSendMessage() {
   const [messageReceived, setMessageReceived] = useState([]);
   const [room, setRoom] = useState("");
   const [messageList, setMessageList] = useState([]);
-  const { room: roomParam } = useParams();
-
+  const { room: roomParam,id : user_id } = useParams();
   useEffect(() => {
     setRoom(roomParam);
     if (roomParam !== "") {
