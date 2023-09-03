@@ -11,7 +11,7 @@ import Register from "./pages/Register";
 import { Toaster } from "react-hot-toast";
 import { io } from "socket.io-client";
 import "./App.css";
-let socket = io.connect("http://localhost:3001");
+let socket = io.connect("https://chat-app-server-xas6.onrender.com");
 export const userServer = `http://localhost:3001/api/v1.1/users`;
 
 export default function App() {
