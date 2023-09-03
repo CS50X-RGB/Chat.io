@@ -23,7 +23,7 @@ function JoinRoom({ socket }) {
   const fetchUserProfile = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3001/api/v1.1/users/myProfile",
+        "https://chat-app-server-xas6.onrender.com/api/v1.1/users/myProfile",
         {
           headers: {
             "Content-Type": "application/json",
