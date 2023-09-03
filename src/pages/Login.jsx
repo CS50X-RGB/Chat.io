@@ -8,6 +8,8 @@ import axios from "axios";
 import { toast } from "react-hot-toast";
 
 function reducer(state, action) {
+  console.log("Action", action);
+  console.log("Current state", state);
   switch (action.type) {
     case "setEmail":
       return { ...state, email: action.payload };
@@ -75,7 +77,6 @@ export function Login() {
 
   return (
     <>
-    {console.log("I am called")}
       <div className="bg-[#121636] shadow-xl shadow-black rounded-b-xl">
         <Header />
         <form

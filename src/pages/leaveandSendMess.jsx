@@ -4,15 +4,44 @@ import { useParams } from "react-router-dom";
 import "../index.css";
 import Header from "../Components/Header";
 import axios from "axios";
-const socket = io.connect("http://localhost:3001");
 
-function LeaveRoomAndSendMessage() {
+//const socket = io.connect("http://localhost:3001");
+
+function LeaveRoomAndSendMessage({ socket }) {
   const [message, setMessage] = useState("");
   const [messageReceived, setMessageReceived] = useState([]);
+  const [temp, setTemp] = useState([]);
   const [room, setRoom] = useState("");
   const [messageList, setMessageList] = useState([]);
-  const { room: roomParam,id : user_id } = useParams();
+  const { room: roomParam, id: userId } = useParams();
+  const [user, setUser] = useState("");
+  const [messageSenderName, setMessageSenderName] = useState("");
+
   useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3001/api/v1.1/users/myProfile",
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          }
+        );
+
+        console.log("user data", response.data.user);
+        setUser(response.data.user);
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
+
+  useEffect(() => {
+    console.log("----------roomParam useeffect called------------");
     setRoom(roomParam);
     if (roomParam !== "") {
       socket.emit("join_room", roomParam);
@@ -30,32 +59,45 @@ function LeaveRoomAndSendMessage() {
 
   const sendMessage = () => {
     if (message !== "" && room !== "") {
-      socket.emit("send_message", { message, room });
+      socket.emit("send_message", { message, room, sender: user.name });
       setMessage("");
     }
   };
 
   useEffect(() => {
+    console.log("---------setMessageReceived useeffect callleddd-----------");
     socket.on("r-m", (data) => {
-      setMessageReceived((prevMessages) => [...prevMessages, data.message]);
+      console.log("msg from server", data);
+      setMessageReceived((prevState) => [...prevState, { ...data }]);
     });
   }, []);
 
   useEffect(() => {
+    console.log("msg received", messageReceived);
+  }, [messageReceived]);
+
+  useEffect(() => {
+    console.log("-----------setMessageList useeffect callleddd--------------");
     setMessageList(
-      messageReceived.map((msg, index) => (
+      messageReceived.map((obj, index) => (
         <div
           key={index}
-          className="text-blue-300 bg-blue-500 rounded-xl m-3 flex flex-col p-3 text-4xl font-chakra"
+          className="text-blue-300 bg-blue-500 rounded-xl m-3 p-3 text-4xl font-chakra"
+          style={{
+            alignSelf: obj.senderName === user.name ? "flex-end" : "flex-start",
+            background: obj.senderName === user.name ? "#b9fcae" : "#a21212",
+            color: "black",
+          }}
         >
-          {msg}
+          <h1 className="text-pink-500 text-3xl font-bold">{obj.senderName}</h1>
+          {obj.message}
         </div>
       ))
     );
   }, [messageReceived]);
 
   const isAuth = JSON.parse(localStorage.getItem("auth")) || false;
-
+  console.log("isauth", isAuth);
   return (
     <div className="bg-[#121636] scroll-m-4 min-h-screen">
       <Header />
@@ -75,7 +117,12 @@ function LeaveRoomAndSendMessage() {
             Leave Room
           </button>
         </div>
-        <div className="scroll-m-4 p-4">{messageList}</div>
+        <div
+          className="scroll-m-4 p-4"
+          style={{ display: "flex", flexDirection: "column" }}
+        >
+          {messageList}
+        </div>
       </div>
       <div className="fixed bottom-0 flex flex-row p-4 max-w-full">
         <input

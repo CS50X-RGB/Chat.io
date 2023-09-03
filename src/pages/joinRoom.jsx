@@ -7,12 +7,13 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 
-const socket = io.connect("http://localhost:3001");
+// const socket = io.connect("http://localhost:3001");
 
-function JoinRoom() {
+function JoinRoom({ socket }) {
+  console.log("socket hai", socket);
   const isAuth = useSelector((state) => state.auth.isAuth);
   const [room, setRoom] = useState("");
-  const [userProfile, setUserProfile] = useState(null); 
+  const [userProfile, setUserProfile] = useState(null);
   const navigate = useNavigate();
   console.log(isAuth);
   useEffect(() => {
@@ -30,6 +31,8 @@ function JoinRoom() {
           withCredentials: true,
         }
       );
+
+      console.log("user data", response.data.user);
       setUserProfile(response.data.user);
     } catch (error) {
       console.error("Error fetching user profile:", error);
@@ -49,6 +52,8 @@ function JoinRoom() {
             withCredentials: true,
           }
         );
+
+        console.log("response aya", response);
 
         if (response && response.data) {
           toast.custom((t) => (
