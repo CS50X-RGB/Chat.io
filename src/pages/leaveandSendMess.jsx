@@ -10,18 +10,15 @@ import axios from "axios";
 function LeaveRoomAndSendMessage({ socket }) {
   const [message, setMessage] = useState("");
   const [messageReceived, setMessageReceived] = useState([]);
-  const [temp, setTemp] = useState([]);
   const [room, setRoom] = useState("");
   const [messageList, setMessageList] = useState([]);
   const { room: roomParam, id: userId } = useParams();
   const [user, setUser] = useState("");
-  const [messageSenderName, setMessageSenderName] = useState("");
-
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
         const response = await axios.get(
-          "https://chat-app-server-xas6.onrender.com/api/v1.1/users/myProfile",
+          "http://localhost:3001/api/v1.1/users/myProfile",
           {
             headers: {
               "Content-Type": "application/json",

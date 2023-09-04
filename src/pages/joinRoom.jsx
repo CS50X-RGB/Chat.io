@@ -44,7 +44,7 @@ function JoinRoom({ socket }) {
     if (isAuth && room !== "" && userProfile) {
       try {
         const response = await axios.post(
-          "https://chat-app-server-xas6.onrender.com/api/v1.1/chat/join",
+          "http://localhost:3001/api/v1.1/chat/join",
           {
             roomno: room,
           },
