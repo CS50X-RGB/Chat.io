@@ -5,7 +5,6 @@ import "../index.css";
 import Header from "../Components/Header";
 import axios from "axios";
 
-//const socket = io.connect("http://localhost:3001");
 
 function LeaveRoomAndSendMessage({ socket }) {
   const [message, setMessage] = useState("");
