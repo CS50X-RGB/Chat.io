@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import io from "socket.io-client";
 import { useParams } from "react-router-dom";
 import "../index.css";
 import Header from "../Components/Header";
@@ -9,12 +8,10 @@ import axios from "axios";
 function LeaveRoomAndSendMessage({ socket }) {
   const [message, setMessage] = useState("");
   const [messageReceived, setMessageReceived] = useState([]);
-  const [temp, setTemp] = useState([]);
   const [room, setRoom] = useState("");
   const [messageList, setMessageList] = useState([]);
-  const { room: roomParam, id: userId } = useParams();
+  const { room: roomParam } = useParams();
   const [user, setUser] = useState("");
-  const [messageSenderName, setMessageSenderName] = useState("");
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -45,7 +42,7 @@ function LeaveRoomAndSendMessage({ socket }) {
     if (roomParam !== "") {
       socket.emit("join_room", roomParam);
     }
-  }, [roomParam]);
+  }, [roomParam.socket]);
 
   const leaveRoom = () => {
     if (room !== "") {
@@ -65,11 +62,19 @@ function LeaveRoomAndSendMessage({ socket }) {
 
   useEffect(() => {
     console.log("---------setMessageReceived useeffect callleddd-----------");
-    socket.on("r-m", (data) => {
+  
+    const handleReceivedMessage = (data) => {
       console.log("msg from server", data);
       setMessageReceived((prevState) => [...prevState, { ...data }]);
-    });
-  }, []);
+    };
+  
+    socket.on("r-m", handleReceivedMessage);
+  
+    // Cleanup the event listener when the component unmounts
+    return () => {
+      socket.off("r-m", handleReceivedMessage);
+    };
+  }, [socket]);  
 
   useEffect(() => {
     console.log("msg received", messageReceived);
@@ -93,7 +98,7 @@ function LeaveRoomAndSendMessage({ socket }) {
         </div>
       ))
     );
-  }, [messageReceived]);
+  }, [messageReceived,user.name]);
 
   const isAuth = JSON.parse(localStorage.getItem("auth")) || false;
   console.log("isauth", isAuth);

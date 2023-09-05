@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import io from "socket.io-client";
 import "../index.css";
 import Header from "../Components/Header";
 import { useNavigate } from "react-router-dom";
