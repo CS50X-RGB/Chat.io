@@ -38,11 +38,30 @@ function LeaveRoomAndSendMessage({ socket }) {
 
   useEffect(() => {
     console.log("----------roomParam useeffect called------------");
-    setRoom(roomParam);
-    if (roomParam !== "") {
-      socket.emit("join_room", roomParam);
-    }
-  }, [roomParam.socket]);
+  
+    const joinRoomIfValid = () => {
+      if (roomParam !== "" && socket) { // Check if socket is truthy
+        socket.emit("join_room", roomParam);
+      }
+    };
+
+    setRoom(roomParam); 
+  
+    joinRoomIfValid(); // Join room on initial mount
+  
+    return () => {
+      // Cleanup function if needed
+      // Example: socket.off("join_room", someHandlerFunction);
+    };
+  
+  }, [roomParam, socket]);
+  
+  
+  
+  
+  
+  
+  
 
   const leaveRoom = () => {
     if (room !== "") {
