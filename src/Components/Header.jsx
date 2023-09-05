@@ -34,7 +34,7 @@ export default function Header() {
   const handleLogout = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3001/api/v1.1/api/v1.1/users/logout`,
+        `http://localhost:3001/api/v1.1/users/logout`,
         {
           headers: {
             "Content-Type": "application/json",
