@@ -16,7 +16,7 @@ export default function Header() {
   useEffect(() => {
     if (isAuth) {
       axios
-        .get("http://localhost:3001/api/v1.1/users/myProfile", {
+        .get("https://chat-app-server-xas6.onrender.com/api/v1.1/users/myProfile", {
           headers: {
             "Content-Type": "application/json",
           },
@@ -34,7 +34,7 @@ export default function Header() {
   const handleLogout = async () => {
     try {
       await axios.get(
-        `http://localhost:3001/api/v1.1/users/logout`,
+        `https://chat-app-server-xas6.onrender.com/api/v1.1/users/logout`,
         {
           headers: {
             "Content-Type": "application/json",
