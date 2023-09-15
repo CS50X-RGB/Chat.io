@@ -28,8 +28,8 @@ export default function Profile() {
 
   return (
     <div className="bg-[#121636]">
-      <Header/>
-      <div className="text-white text-center">
+    <Header/> 
+      <div className="text-white text-center flex flex-col w-1/12">
         {isAuth && user ? <p>Hi {user.name}</p> : <p>Welcome</p>}
       </div>
     </div>

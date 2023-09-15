@@ -1,14 +1,10 @@
 import React, { useState } from "react";
-import { useDispatch } from 'react-redux'; 
 import Header from "../Components/Header";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import { login } from "../features/cart/authSlice"; 
 
 export default function Register() {
-  const dispatch = useDispatch(); 
-  const navigate = useNavigate(); 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -43,20 +39,14 @@ export default function Register() {
           withCredentials: true,
         }
       );
-
-      // Check if response and response.data exist before using them
       if (response && response.data) {
         toast.custom((t) => (
-          <div className="border-2 border-black bg-gradient-to-tr from-green-500 via-green-600 to-green-700 text-black font-chakra p-3 rounded-md">
+          <div className="border-2 border-black bg-gradient-to-tr from-blue-500 via-blue-600 to-blue-700 text-black font-chakra p-3 rounded-md">
             <strong>Success: </strong> {response.data.message}
           </div>
         ));
-
-        dispatch(login()); 
-        localStorage.setItem("auth", true); // Set auth state in localStorage
-        navigate('/myProfile');
       }
-    } catch (error) {
+    } catch (error) { 
       toast.custom((t) => (
         <div className="border-2 border-white bg-gradient-to-tr from-red-400 to-red-700 text-white font-chakra p-3 rounded-md">
           <strong>Error:</strong> {error.response.data.message}

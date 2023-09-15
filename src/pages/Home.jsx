@@ -1,16 +1,14 @@
 import Header from "../Components/Header";
 import { useSelector } from "react-redux";
+import SideBar from "../Components/Sidebar";
 
 export default function Home() {
   const isAuth = useSelector((store) => store.auth.isAuth);
   console.log(isAuth);
   return (
-    <div>
+    <div className="flex flex-col gap-4">
       <Header />
-      <h1 className="text-white text-center">
-        {isAuth} is value of the auth now
-      </h1>
-      {isAuth ? <p>Hi Rohan</p> : <p>Null hai bhai</p>}
+      {isAuth ? <SideBar/> : null}
     </div>
   );
 }

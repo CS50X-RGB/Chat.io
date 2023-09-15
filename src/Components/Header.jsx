@@ -59,11 +59,12 @@ export default function Header() {
   };
 
   return (
-    <div className="flex justify-between p-6 bg-blue-800 ">
-      <h1 className="text-blue-500 text-4xl font-chakra text-center">
+    <div className="flex justify-between p-6 bg-[#121636] ">
+    <Link to={"/"}><h1 className="text-blue-500 text-4xl font-chakra text-center">
         RohanChat.io
         <p className="text-sm text-start">Let's Chat</p>
       </h1>
+      </Link>
       <div className="flex gap-4">
         {isAuth ? (
           <>
