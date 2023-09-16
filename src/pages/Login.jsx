@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "../Components/Header";
 import axios from "axios";
 import { toast } from "react-hot-toast";
+import Footer from "../Components/Footer";
 
 function reducer(state, action) {
   console.log("Action", action);
@@ -110,7 +111,8 @@ export function Login() {
           </div>
         </form>
       </div>
-    </>
+      <Footer/>
+      </>
   );
 }
 

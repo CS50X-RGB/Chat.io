@@ -6,7 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-
+import Footer from "../Components/Footer";
+import Sidebar from "../Components/Sidebar";
 // const socket = io.connect("http://localhost:3001");
 
 function JoinRoom({ socket }) {
@@ -81,25 +82,29 @@ function JoinRoom({ socket }) {
   };
 
   return (
-    <div className="bg-[#121636]">
-      <Header />
-      <div className="pt-[10px] px-4">
-        <div className="flex justify-center items-center p-7 drop-shadow-2xl drop-shadow-green-400">
-          <form onSubmit={joinRoom}>
-            <input
-              type="text"
-              placeholder="Enter Room No.."
-              onChange={(e) => setRoom(e.target.value)}
-              value={room}
-              className="text-blue-700 p-3 rounded-l-lg focus:bg-blue-300 font-chakra"
-            />
-            <button className="bg-[#1d54c9] text-white rounded-r-xl p-3 font-chakra">
-              Join Room
-            </button>
-          </form>
+    <>
+      <div className="bg-[#121636]">
+        <Header />
+        <div className="pt-[10px] px-4">
+          <div className="flex justify-center items-center p-7 drop-shadow-2xl drop-shadow-green-400">
+            <form onSubmit={joinRoom}>
+              <input
+                type="text"
+                placeholder="Enter Room No.."
+                onChange={(e) => setRoom(e.target.value)}
+                value={room}
+                className="text-blue-700 p-3 rounded-l-lg focus:bg-blue-300 font-chakra"
+              />
+              <button className="bg-[#1d54c9] text-white rounded-r-xl p-3 font-chakra">
+                Join Room
+              </button>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
+      <Sidebar />
+      <Footer />
+    </>
   );
 }
 
