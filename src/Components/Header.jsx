@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { logout } from "../features/cart/authSlice";
 import { useEffect, useState } from "react";
+import logo from "../assests/logo.png";
 
 export default function Header() {
   const { isAuth } = useSelector((state) => state.auth);
@@ -60,10 +61,12 @@ export default function Header() {
 
   return (
     <div className="flex justify-between p-6 bg-[#121636] ">
-    <Link to={"/"}><h1 className="text-blue-500 text-4xl font-chakra text-center">
-        RohanChat.io
-        <p className="text-sm text-start">Let's Chat</p>
-      </h1>
+      <Link to={"/"} className="flex flex-col">
+        <h1 className="flex px-1 flex-row gap-3 text-blue-500 text-4xl font-chakra text-center">
+        <img src={logo} className="w-10 h-10" alt="logo"/>
+          RohanChat.io
+        </h1>
+        <p className="text-sm text-start text-blue-500">Let's Chat</p>
       </Link>
       <div className="flex gap-4">
         {isAuth ? (

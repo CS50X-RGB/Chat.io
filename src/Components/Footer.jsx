@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
-    <div className="flex flex-col space-y-7 font-chakra bg-black text-white items-center justify-center flex-end h-[40%]">
+    <div className="flex flex-col space-y-7 font-chakra bg-black text-white items-center justify-center flex-end min-h-screen">
       <div className="flex flex-col justify-center p-5">
         <div className="flex flex-col text-center text-2xl">
           <h1>I love Open sourcing if you found any bug lets fix it together</h1>
