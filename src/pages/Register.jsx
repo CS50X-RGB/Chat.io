@@ -1,16 +1,19 @@
 import React, { useState } from "react";
 import Header from "../Components/Header";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import Footer from "../Components/Footer";
+import { useDispatch,useSelector } from "react-redux";
+import { login } from "../features/cart/authSlice";
 
 export default function Register() {
- 
+  const dispatch = useDispatch();
+const { isAuth } = useSelector((state) => state.auth);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const navigate = useNavigate();
   const handleNameChange = (e) => {
     setName(e.target.value);
   };
@@ -48,6 +51,9 @@ export default function Register() {
           </div>
         ));
       }
+      dispatch(login());
+      console.log(isAuth);
+      navigate('/');
     } catch (error) {
       toast.custom((t) => (
         <div className="border-2 border-white bg-gradient-to-tr from-red-400 to-red-700 text-white font-chakra p-3 rounded-md">

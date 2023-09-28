@@ -12,6 +12,7 @@ function LeaveRoomAndSendMessage({ socket }) {
   const { room: roomno, id } = useParams();
   const [user, setUser] = useState("");
   const navigate = useNavigate();
+
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
@@ -49,12 +50,13 @@ function LeaveRoomAndSendMessage({ socket }) {
       alert(`Room no. ${room} Left`);
       setMessage("");
       setMessageReceived([]);
-      navigate('/join');
+      navigate("/join");
     }
   };
 
   const sendMessage = () => {
     if (message !== "" && room !== "") {
+      console.log("Sending message:", message);
       socket.emit("send_message", { message, room, sender: user.name });
       setMessage("");
     }
@@ -101,52 +103,51 @@ function LeaveRoomAndSendMessage({ socket }) {
         if (obj.senderName !== user.name) {
           const userData = await getUserData(obj.senderName);
           console.log();
-          if (userData) {
+          if (userData && userData._id) {
             userDataSet.add(userData._id);
           }
         }
       }
-      console.log(userDataSet);
-      for (const obj of messageReceived) {
-        if(userDataSet == null){
-          console.log("No recivers are there");
-        }
-        if (obj.message) {
-          const addUsertoDb = async (message) => {
-            try {
-              const response = await axios.post(
-                `http://localhost:3001/api/v1.1/chat/chat/${id}/${roomno}`,
-                {
-                  content: message,
-                  receivers: Array.from(userDataSet),
-                  
-                },
-                {
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  withCredentials: true,
-                }
-              );
-              console.log(message  +  Array.from(userDataSet))
-              if (response && response.data) {
-                toast.custom((t) => (
-                  <div className="border-2 border-black bg-gradient-to-tr from-green-500 via-green-600 to-green-700 text-black font-chakra p-3 rounded-md">
-                    <strong>Success: </strong> {response.data.message}
-                  </div>
-                ));
-              }
-            } catch (error) {
-              console.error("Error adding user to the database:", error);
+      console.log(Array.from(userDataSet));
+      if (userDataSet.size === 0) {
+        console.log("No receivers are there");
+      }
+      try {
+        console.log(messageReceived);
+
+          const response = await axios.post(
+            `http://localhost:3001/api/v1.1/chat/chat/${id}/${roomno}`,
+            {
+              content: {
+                senderName: messageReceived[messageReceived.length - 1].senderName,
+                message: messageReceived[messageReceived.length - 1].message,
+              },
+              receivers: Array.from(userDataSet),
+            },
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+              withCredentials: true,
             }
-          };
-          addUsertoDb(obj.message);
-        }
+          );
+
+          if (response && response.data) {
+            toast.custom((t) => (
+              <div className="border-2 border-black bg-gradient-to-tr from-green-500 via-green-600 to-green-700 text-black font-chakra p-3 rounded-md">
+                <strong>Success: </strong> {response.data.message}
+              </div>
+            ));
+          }
+  
+      } catch (error) {
+        console.error("Error adding user to the database:", error);
       }
     };
 
     fetchUserDataForMessages();
   }, [messageReceived, roomno, id, user]);
+
   const isAuth = JSON.parse(localStorage.getItem("auth")) || false;
   console.log("isAuth", isAuth);
 
@@ -176,7 +177,7 @@ function LeaveRoomAndSendMessage({ socket }) {
           {messageReceived.map((obj, index) => (
             <div
               key={index}
-              className="text-blue-300 bg-blue-500 rounded-xl m-3 p-3 text-4xl font-chakra shadow-xl shadow-[#121636]"
+              className="text-blue-300 bg-blue-500 rounded-xl m-3 p-3 text-4xl font-chakra shadow-xl shadow-pink-500"
               style={{
                 alignSelf:
                   obj.senderName === user.name ? "flex-end" : "flex-start",
@@ -209,9 +210,6 @@ function LeaveRoomAndSendMessage({ socket }) {
             Send Message
           </button>
         )}
-        
-
-        
       </div>
     </div>
   );

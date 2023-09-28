@@ -43,8 +43,8 @@ export default function Home() {
     <>
       <Header />
       <div className="flex flex-col gap-4">
-        {isAuth ? <SideBar /> : null}
         <div className="flex flex-row justify-around p-8 bg-gradient-to-bl from-blue-300 via-pink-400 to-blue-500">
+        {isAuth ? <SideBar /> : null}
           <div className="flex flex-col justify-center items-center">
             <h1 className="text-blue-900 text-xl text-left md:text-5xl font-chakra font-bold flex flex-col items-center justify-center">
               Welcome to RohanChat.io –
