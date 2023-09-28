@@ -61,7 +61,7 @@ function LeaveRoomAndSendMessage({ socket }) {
       setMessage("");
     }
   };
-
+  
   useEffect(() => {
     console.log("---------setMessageReceived useEffect called-----------");
     socket.on("r-m", (data) => {
@@ -145,7 +145,43 @@ function LeaveRoomAndSendMessage({ socket }) {
       }
     };
 
-    fetchUserDataForMessages();
+    fetchUserDataForMessages(); 
+    const getMessages = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3001/api/v1.1/chat/chat/${roomno}/${id}` ,
+          {
+            headers: {
+              "Content-Type": "application/json"
+            },
+            withCredentials: true,
+          }
+        );
+        console.log(response.data.content);
+        // const newMessages = response.data.content.map((message) => {
+        //  Check if the senderName matches the user's name to determine isSender
+          // const isSender = message.senderName === user.name;
+  
+          // return {
+            // senderName: message.senderName,
+            // isSender,
+            // id: message.id // Include the id if needed
+          // };
+        // });
+  
+        //Update messageReceived state
+        // setMessageReceived(newMessages);
+        // console.log(newMessages);
+      // 
+      
+      
+      
+      
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getMessages();
   }, [messageReceived, roomno, id, user]);
 
   const isAuth = JSON.parse(localStorage.getItem("auth")) || false;
