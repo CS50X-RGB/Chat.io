@@ -13,6 +13,24 @@ function LeaveRoomAndSendMessage({ socket }) {
   const [user, setUser] = useState("");
   const navigate = useNavigate();
 
+  const getMessages = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3001/api/v1.1/chat/chat/${roomno}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      console.log(response.data.content);
+      setMessageReceived(response.data.content);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
@@ -41,6 +59,8 @@ function LeaveRoomAndSendMessage({ socket }) {
     setRoom(roomno);
     if (roomno !== "") {
       socket.emit("join_room", roomno);
+      // Call getMessages when roomno changes to fetch old messages
+      getMessages();
     }
   }, [roomno]);
 
@@ -61,7 +81,7 @@ function LeaveRoomAndSendMessage({ socket }) {
       setMessage("");
     }
   };
-  
+
   useEffect(() => {
     console.log("---------setMessageReceived useEffect called-----------");
     socket.on("r-m", (data) => {
@@ -115,73 +135,36 @@ function LeaveRoomAndSendMessage({ socket }) {
       try {
         console.log(messageReceived);
 
-          const response = await axios.post(
-            `http://localhost:3001/api/v1.1/chat/chat/${id}/${roomno}`,
-            {
-              content: {
-                senderName: messageReceived[messageReceived.length - 1].senderName,
-                message: messageReceived[messageReceived.length - 1].message,
-              },
-              receivers: Array.from(userDataSet),
+        const response = await axios.post(
+          `http://localhost:3001/api/v1.1/chat/chat/${id}/${roomno}`,
+          {
+            content: {
+              senderName: messageReceived[messageReceived.length - 1].senderName,
+              message: messageReceived[messageReceived.length - 1].message,
             },
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-              withCredentials: true,
-            }
-          );
-
-          if (response && response.data) {
-            toast.custom((t) => (
-              <div className="border-2 border-black bg-gradient-to-tr from-green-500 via-green-600 to-green-700 text-black font-chakra p-3 rounded-md">
-                <strong>Success: </strong> {response.data.message}
-              </div>
-            ));
+            receivers: Array.from(userDataSet),
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
           }
-  
+        );
+
+        if (response && response.data) {
+          toast.custom((t) => (
+            <div className="border-2 border-black bg-gradient-to-tr from-green-500 via-green-600 to-green-700 text-black font-chakra p-3 rounded-md">
+              <strong>Success: </strong> {response.data.message}
+            </div>
+          ));
+        }
       } catch (error) {
         console.error("Error adding user to the database:", error);
       }
     };
 
-    fetchUserDataForMessages(); 
-    const getMessages = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:3001/api/v1.1/chat/chat/${roomno}/${id}` ,
-          {
-            headers: {
-              "Content-Type": "application/json"
-            },
-            withCredentials: true,
-          }
-        );
-        console.log(response.data.content);
-        // const newMessages = response.data.content.map((message) => {
-        //  Check if the senderName matches the user's name to determine isSender
-          // const isSender = message.senderName === user.name;
-  
-          // return {
-            // senderName: message.senderName,
-            // isSender,
-            // id: message.id // Include the id if needed
-          // };
-        // });
-  
-        //Update messageReceived state
-        // setMessageReceived(newMessages);
-        // console.log(newMessages);
-      // 
-      
-      
-      
-      
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getMessages();
+    fetchUserDataForMessages();
   }, [messageReceived, roomno, id, user]);
 
   const isAuth = JSON.parse(localStorage.getItem("auth")) || false;
