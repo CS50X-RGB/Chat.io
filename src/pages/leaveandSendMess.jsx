@@ -1,23 +1,41 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import "../index.css";
-import Header from "../Components/Header";
 import axios from "axios";
-
+import Header from "../Components/Header";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 function LeaveRoomAndSendMessage({ socket }) {
   const [message, setMessage] = useState("");
   const [messageReceived, setMessageReceived] = useState([]);
   const [room, setRoom] = useState("");
-  const [messageList, setMessageList] = useState([]);
-  const { room: roomParam } = useParams();
+  const { room: roomno, id } = useParams();
   const [user, setUser] = useState("");
+  const navigate = useNavigate();
+
+  const getMessages = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3001/api/v1.1/chat/chat/${roomno}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      console.log(response.data.content);
+      setMessageReceived(response.data.content);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
         const response = await axios.get(
-          "https://chat-app-server-xas6.onrender.com/api/v1.1/users/myProfile",
+          "http://localhost:3001/api/v1.1/users/myProfile",
           {
             headers: {
               "Content-Type": "application/json",
@@ -37,31 +55,14 @@ function LeaveRoomAndSendMessage({ socket }) {
   }, []);
 
   useEffect(() => {
-    console.log("----------roomParam useeffect called------------");
-  
-    const joinRoomIfValid = () => {
-      if (roomParam !== "" && socket) { // Check if socket is truthy
-        socket.emit("join_room", roomParam);
-      }
-    };
-
-    setRoom(roomParam); 
-  
-    joinRoomIfValid(); // Join room on initial mount
-  
-    return () => {
-      // Cleanup function if needed
-      // Example: socket.off("join_room", someHandlerFunction);
-    };
-  
-  }, [roomParam, socket]);
-  
-  
-  
-  
-  
-  
-  
+    console.log("----------roomno useEffect called------------");
+    setRoom(roomno);
+    if (roomno !== "") {
+      socket.emit("join_room", roomno);
+      // Call getMessages when roomno changes to fetch old messages
+      getMessages();
+    }
+  }, [roomno]);
 
   const leaveRoom = () => {
     if (room !== "") {
@@ -69,69 +70,117 @@ function LeaveRoomAndSendMessage({ socket }) {
       alert(`Room no. ${room} Left`);
       setMessage("");
       setMessageReceived([]);
+      navigate("/join");
     }
   };
 
   const sendMessage = () => {
     if (message !== "" && room !== "") {
+      console.log("Sending message:", message);
       socket.emit("send_message", { message, room, sender: user.name });
       setMessage("");
     }
   };
 
   useEffect(() => {
-    console.log("---------setMessageReceived useeffect callleddd-----------");
-  
-    const handleReceivedMessage = (data) => {
+    console.log("---------setMessageReceived useEffect called-----------");
+    socket.on("r-m", (data) => {
       console.log("msg from server", data);
       setMessageReceived((prevState) => [...prevState, { ...data }]);
-    };
-  
-    socket.on("r-m", handleReceivedMessage);
-  
-    // Cleanup the event listener when the component unmounts
-    return () => {
-      socket.off("r-m", handleReceivedMessage);
-    };
-  }, [socket]);  
+    });
+  }, [socket]);
 
   useEffect(() => {
     console.log("msg received", messageReceived);
   }, [messageReceived]);
 
   useEffect(() => {
-    console.log("-----------setMessageList useeffect callleddd--------------");
-    setMessageList(
-      messageReceived.map((obj, index) => (
-        <div
-          key={index}
-          className="text-blue-300 bg-blue-500 rounded-xl m-3 p-3 text-4xl font-chakra"
-          style={{
-            alignSelf: obj.senderName === user.name ? "flex-end" : "flex-start",
-            background: obj.senderName === user.name ? "#b9fcae" : "#a21212",
-            color: "black",
-          }}
-        >
-          <h1 className="text-pink-500 text-3xl font-bold">{obj.senderName}</h1>
-          {obj.message}
-        </div>
-      ))
-    );
-  }, [messageReceived,user.name]);
+    console.log("-----------setMessageList useEffect called--------------");
+    const getUserData = async (senderName) => {
+      if (senderName !== user.name) {
+        try {
+          const response = await axios.get(
+            `http://localhost:3001/api/v1.1/users/getUser/${senderName}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+              withCredentials: true,
+            }
+          );
+          return response.data;
+        } catch (error) {
+          console.error(`Error fetching user data for ${senderName}:`, error);
+          return null;
+        }
+      }
+    };
+
+    const fetchUserDataForMessages = async () => {
+      const userDataSet = new Set();
+
+      for (const obj of messageReceived) {
+        if (obj.senderName !== user.name) {
+          const userData = await getUserData(obj.senderName);
+          console.log();
+          if (userData && userData._id) {
+            userDataSet.add(userData._id);
+          }
+        }
+      }
+      console.log(Array.from(userDataSet));
+      if (userDataSet.size === 0) {
+        console.log("No receivers are there");
+      }
+      try {
+        console.log(messageReceived);
+
+        const response = await axios.post(
+          `http://localhost:3001/api/v1.1/chat/chat/${id}/${roomno}`,
+          {
+            content: {
+              senderName: messageReceived[messageReceived.length - 1].senderName,
+              message: messageReceived[messageReceived.length - 1].message,
+            },
+            receivers: Array.from(userDataSet),
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          }
+        );
+
+        if (response && response.data) {
+          toast.custom((t) => (
+            <div className="border-2 border-black bg-gradient-to-tr from-green-500 via-green-600 to-green-700 text-black font-chakra p-3 rounded-md">
+              <strong>Success: </strong> {response.data.message}
+            </div>
+          ));
+        }
+      } catch (error) {
+        console.error("Error adding user to the database:", error);
+      }
+    };
+
+    fetchUserDataForMessages();
+  }, [messageReceived, roomno, id, user]);
 
   const isAuth = JSON.parse(localStorage.getItem("auth")) || false;
-  console.log("isauth", isAuth);
+  console.log("isAuth", isAuth);
+
   return (
-    <div className="bg-[#121636] scroll-m-4 min-h-screen">
+    <div className="bg-[#121636] min-h-screen">
       <Header />
-      <div className="pt-[10px] px-4">
+      <div className="pt-10 px-4">
         <div className="p-3 flex flex-row justify-between">
           <input
             type="text"
             placeholder="Enter Room No.."
             value={room}
             readOnly
-            className="text-blue-700 flex flex-row justify-center items-center  p-3 rounded-l-lg focus:bg-blue-300 font-chakra"
+            className="text-blue-700 flex flex-row justify-center items-center p-3 rounded-l-lg focus:bg-blue-300 font-chakra"
           />
           <button
             onClick={leaveRoom}
@@ -141,10 +190,27 @@ function LeaveRoomAndSendMessage({ socket }) {
           </button>
         </div>
         <div
-          className="scroll-m-4 p-4"
+          className="p-4"
           style={{ display: "flex", flexDirection: "column" }}
         >
-          {messageList}
+          {messageReceived.map((obj, index) => (
+            <div
+              key={index}
+              className="text-blue-300 bg-blue-500 rounded-xl m-3 p-3 text-4xl font-chakra shadow-xl shadow-pink-500"
+              style={{
+                alignSelf:
+                  obj.senderName === user.name ? "flex-end" : "flex-start",
+                background:
+                  obj.senderName === user.name ? "#1d54c9" : "#121636",
+                color: "white",
+              }}
+            >
+              <h1 className="text-pink-500 text-3xl font-bold">
+                {obj.senderName}
+              </h1>
+              {obj.message}
+            </div>
+          ))}
         </div>
       </div>
       <div className="fixed bottom-0 flex flex-row p-4 max-w-full">

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from 'react-redux'; // Import useSelector
 import axios from "axios";
 import Header from "../Components/Header";
+import Footer from "../Components/Footer";
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -10,7 +11,7 @@ export default function Profile() {
   useEffect(() => {
     if (isAuth) {
       axios
-        .get("https://chat-app-server-xas6.onrender.com/api/v1.1/users/myProfile",{
+        .get("http://localhost:3001/api/v1.1/users/myProfile",{
           headers:{
             'Content-Type':'application/json',
           },
@@ -22,15 +23,19 @@ export default function Profile() {
         .catch((error) => {
           console.error("Error fetching user profile:", error);
         });
+        
     }
   }, [isAuth]);
 
   return (
+    <>
     <div className="bg-[#121636]">
-      <Header/>
-      <div className="text-white text-center">
+    <Header/> 
+      <div className="text-white text-center flex flex-col w-1/12">
         {isAuth && user ? <p>Hi {user.name}</p> : <p>Welcome</p>}
       </div>
     </div>
+    <Footer/>
+    </>
   );
 }

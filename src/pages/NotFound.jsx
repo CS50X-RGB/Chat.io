@@ -1,3 +1,4 @@
+import Footer from "../Components/Footer";
 import Header from "../Components/Header";
 import pic1 from "../assests/404.svg";
 import { Link } from "react-router-dom";
@@ -17,6 +18,7 @@ export default function NotFound() {
           </div>
         </div>
       </div>
+      <Footer/>
     </>
   );
 }
