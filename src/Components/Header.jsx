@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { logout } from "../features/cart/authSlice";
-import { useEffect, useState } from "react";
 import logo from "../assests/logo.png";
 
 export default function Header() {
@@ -60,53 +59,55 @@ export default function Header() {
   };
 
   return (
-    <div className="flex justify-between p-6 bg-[#121636] ">
-      <Link to={"/"} className="flex flex-col">
-        <h1 className="flex px-1 flex-row gap-3 text-blue-500 text-4xl font-chakra text-center">
-        <img src={logo} className="w-10 h-10" alt="logo"/>
-          RohanChat.io
-        </h1>
-        <p className="text-sm text-start text-blue-500">Let's Chat</p>
-      </Link>
-      <div className="flex gap-4">
-        {isAuth ? (
-          <>
-            <h1 className="text-white font-chakra p-3">
-              Weclome!! {userName.toString().toUpperCase()}
-            </h1>
+    <div className="fixed top-0 left-0 w-full z-20 shadow-lg shadow-pink-300">
+      <div className="max-w-full flex justify-between p-6 bg-[#121636]">
+        <Link to={"/"} className="flex flex-col">
+          <h1 className="flex px-1 flex-row gap-3 text-blue-500 text-4xl font-chakra text-center">
+            <img src={logo} className="w-10 h-10" alt="logo" />
+            RohanChat.io
+          </h1>
+          <p className="text-sm text-start text-blue-500">Let's Chat</p>
+        </Link>
+        <div className="flex gap-4">
+          {isAuth ? (
+            <>
+              <h1 className="text-white font-chakra p-3">
+                Welcome!! {userName.toString().toUpperCase()}
+              </h1>
+              <Link
+                to="/myProfile"
+                className="text-blue-500 bg-white font-chakra rounded-lg px-4 py-3 flex justify-center items-center hover:bg-blue-500 hover:text-white"
+              >
+                My Profile
+              </Link>
+            </>
+          ) : (
             <Link
-              to="/myProfile"
+              to="/register"
               className="text-blue-500 bg-white font-chakra rounded-lg px-4 py-3 flex justify-center items-center hover:bg-blue-500 hover:text-white"
             >
-              My Profile
+              Register
             </Link>
-          </>
-        ) : (
-          <Link
-            to="/register"
-            className="text-blue-500 bg-white font-chakra rounded-lg px-4 py-3 flex justify-center items-center hover:bg-blue-500 hover:text-white"
-          >
-            Register
-          </Link>
-        )}
-        {isAuth ? (
-          <>
-            <span
+          )}
+          {isAuth ? (
+            <>
+              <span
+                className="text-blue-500 bg-white font-chakra rounded-lg px-4 py-3 flex justify-center items-center hover:bg-blue-500 hover:text-white"
+                onClick={handleLogout}
+                style={{ cursor: "pointer" }}
+              >
+                Logout
+              </span>
+            </>
+          ) : (
+            <Link
+              to="/login"
               className="text-blue-500 bg-white font-chakra rounded-lg px-4 py-3 flex justify-center items-center hover:bg-blue-500 hover:text-white"
-              onClick={handleLogout}
-              style={{ cursor: "pointer" }}
             >
-              Logout
-            </span>
-          </>
-        ) : (
-          <Link
-            to="/login"
-            className="text-blue-500 bg-white font-chakra rounded-lg px-4 py-3 flex justify-center items-center hover:bg-blue-500 hover:text-white"
-          >
-            Login
-          </Link>
-        )}
+              Login
+            </Link>
+          )}
+        </div>
       </div>
     </div>
   );

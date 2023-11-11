@@ -83,10 +83,11 @@ function JoinRoom({ socket }) {
 
   return (
     <>
-      <div className="bg-[#121636]">
-        <Header />
-        <div className="pt-[10px] px-4">
-          <div className="flex justify-center items-center p-7 drop-shadow-2xl drop-shadow-green-400">
+      <Header />
+      <div className="bg-gradient-to-br from-blue-800  to-pink-600/40">
+        <div className="flex border-4 border-black flex-row justify-around py-[8rem]">
+          <Sidebar /> 
+          <div className="flex flex-1 justify-around items-center">
             <form onSubmit={joinRoom}>
               <input
                 type="text"
@@ -102,7 +103,6 @@ function JoinRoom({ socket }) {
           </div>
         </div>
       </div>
-      <Sidebar />
       <Footer />
     </>
   );

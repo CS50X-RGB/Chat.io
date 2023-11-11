@@ -23,7 +23,6 @@ const TypingAnimation = ({ text, speed }) => {
       setDisplayingText(text);
     });
   }, [text, speed]);
-  console.log(displayingText);
   return (
     <motion.div
       className="text-black"
@@ -57,7 +56,7 @@ export default function Home() {
           </div>
           <img
             src={image}
-            className="w-1/4 h-1/4 rounded-xl rotate-12 p-6"
+            className="w-1/4 h-1/4 rounded-xl rotate-12 pt-70"
             alt="ChatappHero"
           />
         </div>

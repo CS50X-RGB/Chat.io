@@ -65,8 +65,8 @@ const { isAuth } = useSelector((state) => state.auth);
 
   return (
     <>
-      <div className="bg-[#121636] shadow-xl shadow-black rounded-b-xl">
-        <Header />
+     <Header/>
+      <div className="bg-[#121636] h-screen flex flex-col items-center justify-center shadow-xl shadow-black rounded-b-xl">
         {name !== "" ? (
           <h1 className="text-center font-chakra text-4xl text-blue-500 p-5">
             Hi {name} let's Get Started

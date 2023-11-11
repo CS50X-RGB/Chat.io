@@ -25,18 +25,20 @@ export default function Footer() {
             <h1>
               I love Open sourcing if you found any bug lets fix it together
             </h1>
-            <Link
-              to="https://github.com/CS50X-RGB/Chat.io"
-              className="text-pink-300 hover:text-blue-500"
-            >
-              This Chat.io Frontend
-            </Link>
-            <Link
-              to="https://github.com/CS50X-RGB/Chat.ioServer"
-              className="text-pink-300 hover:text-blue-500"
-            >
-              This Chat.io Backend
-            </Link>
+            <div class="flex justify-center items-center gap-6 flex-row">
+              <Link
+                to="https://github.com/CS50X-RGB/Chat.io"
+                className="text-pink-300 hover:text-blue-500"
+              >
+                This Chat.io Frontend
+              </Link>
+              <Link
+                to="https://github.com/CS50X-RGB/Chat.ioServer"
+                className="text-pink-300 hover:text-blue-500"
+              >
+                This Chat.io Backend
+              </Link>
+            </div>
           </div>
           <h1 className="flex justify-center">
             Made with love by Rohan Chatterjee ;)

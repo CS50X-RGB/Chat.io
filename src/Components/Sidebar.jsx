@@ -28,8 +28,8 @@ export default function SideBar() {
   }, [isAuth]);
 
   return (
-    <div className="bg-[#121636] w-1/12 h-screen p-2 rounded-2xl mx-3 justify-center gap-4 flex flex-col shadow-xl shadow-pink-500">
-      <div className="text-blue-400 text-center flex flex-col justify-between">
+    <div className="bg-[#121636] w-1/12 h-screen p-2 rounded-2xl m-6 justify-center gap-4 flex flex-col shadow-xl shadow-pink-500">
+      <div className="text-blue-400 text-center flex flex-col justify-around">
         {isAuth && user ? (
           <h1 className="text-xl font-chakra mb-4">Hi! {user.name}</h1>
         ) : null}
