@@ -12,6 +12,7 @@ function LeaveRoomAndSendMessage({ socket }) {
   const { room: roomno, id } = useParams();
   const [user, setUser] = useState("");
   const navigate = useNavigate();
+  const [isMounted, setIsMounted] = useState(false);
 
   const getMessages = async () => {
     try {
@@ -25,11 +26,18 @@ function LeaveRoomAndSendMessage({ socket }) {
         }
       );
       console.log(response.data.content);
-      setMessageReceived(response.data.content);
+  
+      // Exclude the last message sent by the current user
+      const filteredMessages = response.data.content.filter(
+        (msg) => !(msg.senderName === user.name && msg.message === message)
+      );
+      console.log(filteredMessages);
+      setMessageReceived(filteredMessages);
     } catch (error) {
       console.log(error);
     }
   };
+  
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -55,14 +63,30 @@ function LeaveRoomAndSendMessage({ socket }) {
   }, []);
 
   useEffect(() => {
+    // Set isMounted to true when the component mounts
+    setIsMounted(true);
+
+    // Cleanup function to set isMounted to false when the component unmounts
+    return () => {
+      setIsMounted(false);
+    };
+  }, []);
+
+  useEffect(() => {
     console.log("----------roomno useEffect called------------");
     setRoom(roomno);
     if (roomno !== "") {
       socket.emit("join_room", roomno);
-      // Call getMessages when roomno changes to fetch old messages
+
+      // Fetch messages when the component mounts
       getMessages();
     }
-  }, [roomno]);
+
+    // Cleanup socket subscription
+    return () => {
+      socket.off("r-m");
+    };
+  }, [roomno, socket]);
 
   const leaveRoom = () => {
     if (room !== "") {
@@ -84,66 +108,25 @@ function LeaveRoomAndSendMessage({ socket }) {
 
   useEffect(() => {
     console.log("---------setMessageReceived useEffect called-----------");
-    socket.on("r-m", (data) => {
+    const handleReceivedMessage = (data) => {
       console.log("msg from server", data);
-      setMessageReceived((prevState) => [...prevState, { ...data }]);
-    });
-  }, [socket]);
+      setMessageReceived((prevMessages) => [...prevMessages, { ...data }]);
+    };
 
-  useEffect(() => {
-    console.log("msg received", messageReceived);
-  }, [messageReceived]);
+    socket.on("r-m", handleReceivedMessage);
+
+    // Cleanup socket subscription
+    return () => {
+      socket.off("r-m", handleReceivedMessage);
+    };
+  }, [socket]);
 
   useEffect(() => {
     console.log("-----------setMessageList useEffect called--------------");
     const getUserData = async (senderName) => {
-      if (senderName !== user.name) {
-        try {
-          const response = await axios.get(
-            `http://localhost:3001/api/v1.1/users/getUser/${senderName}`,
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-              withCredentials: true,
-            }
-          );
-          return response.data;
-        } catch (error) {
-          console.error(`Error fetching user data for ${senderName}:`, error);
-          return null;
-        }
-      }
-    };
-
-    const fetchUserDataForMessages = async () => {
-      const userDataSet = new Set();
-
-      for (const obj of messageReceived) {
-        if (obj.senderName !== user.name) {
-          const userData = await getUserData(obj.senderName);
-          console.log();
-          if (userData && userData._id) {
-            userDataSet.add(userData._id);
-          }
-        }
-      }
-      console.log(Array.from(userDataSet));
-      if (userDataSet.size === 0) {
-        console.log("No receivers are there");
-      }
       try {
-        console.log(messageReceived);
-
-        const response = await axios.post(
-          `http://localhost:3001/api/v1.1/chat/chat/${id}/${roomno}`,
-          {
-            content: {
-              senderName: messageReceived[messageReceived.length - 1].senderName,
-              message: messageReceived[messageReceived.length - 1].message,
-            },
-            receivers: Array.from(userDataSet),
-          },
+        const response = await axios.get(
+          `http://localhost:3001/api/v1.1/users/getUser/${senderName}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -151,86 +134,134 @@ function LeaveRoomAndSendMessage({ socket }) {
             withCredentials: true,
           }
         );
-
-        if (response && response.data) {
-          toast.custom((t) => (
-            <div className="border-2 border-black bg-gradient-to-tr from-green-500 via-green-600 to-green-700 text-black font-chakra p-3 rounded-md">
-              <strong>Success: </strong> {response.data.message}
-            </div>
-          ));
-        }
+    
+        return response.data;
       } catch (error) {
-        console.error("Error adding user to the database:", error);
+        console.error(`Error fetching user data for ${senderName}:`, error);
+        return null;
+      }
+    };
+    const fetchUserDataForMessages = async () => {
+      // Check if the component is mounted before executing the logic
+      if (isMounted) {
+        const userDataSet = new Set();
+
+        for (const obj of messageReceived) {
+          if (obj.senderName !== user.name) {
+            const userData = await getUserData(obj.senderName);
+            console.log(userData);
+            if (userData && userData._id) {
+              userDataSet.add(userData._id);
+            }
+          }
+        }
+
+        console.log(Array.from(userDataSet));
+        if (userDataSet.size === 0) {
+          console.log("No receivers are there");
+        }
+
+        try {
+          console.log(messageReceived[[messageReceived.length - 1]]);
+          const response = await axios.post(
+            `http://localhost:3001/api/v1.1/chat/chat/${id}/${roomno}`,
+            {
+              content: {
+                senderName: messageReceived[messageReceived.length - 1].senderName,
+                message: messageReceived[messageReceived.length - 1].message,
+              },
+              receivers: Array.from(userDataSet),
+            },
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+              withCredentials: true,
+            }
+          );
+
+          if (response && response.data) {
+            toast.custom((t) => (
+              <div className="border-2 border-black bg-gradient-to-tr from-green-500 via-green-600 to-green-700 text-black font-chakra p-3 rounded-md">
+                <strong>Success: </strong> {response.data.message}
+              </div>
+            ));
+          }
+        } catch (error) {
+          console.error("Error adding user to the database:", error);
+        }
       }
     };
 
     fetchUserDataForMessages();
-  }, [messageReceived, roomno, id, user]);
+  }, [messageReceived, roomno, id, user, isMounted]);
 
   const isAuth = JSON.parse(localStorage.getItem("auth")) || false;
   console.log("isAuth", isAuth);
 
   return (
-    <div className="bg-[#121636] min-h-screen">
+    <>
       <Header />
-      <div className="pt-10 px-4">
-        <div className="p-3 flex flex-row justify-between">
+      <div className="bg-[#121636] min-h-screen">
+        <div className="pt-[10rem] px-4">
+          <div className="p-3 flex flex-row justify-between">
+            <input
+              type="text"
+              placeholder="Enter Room No.."
+              value={room}
+              readOnly
+              className="text-blue-700 flex flex-row justify-center items-center p-3 rounded-l-lg focus:bg-blue-300 font-chakra"
+            />
+            <button
+              onClick={leaveRoom}
+              className="bg-[#1d54c9] text-white rounded-xl py-3 px-2 font-chakra"
+            >
+              Leave Room
+            </button>
+          </div>
+          <div
+            className="p-4"
+            style={{ display: "flex", flexDirection: "column" }}
+          >
+            {messageReceived.map((obj, index) => (
+              <div
+                key={index}
+                className="text-blue-300 bg-blue-500 rounded-xl m-3 p-3 text-4xl font-chakra shadow-xl shadow-pink-500"
+                style={{
+                  alignSelf:
+                    obj.senderName === user.name ? "flex-end" : "flex-start",
+                  background:
+                    obj.senderName === user.name ? "#1d54c9" : "#121636",
+                  color: "white",
+                }}
+              >
+                <h1 className="text-pink-500 text-3xl font-bold">
+                  {obj.senderName}
+                </h1>
+                {obj.message}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="fixed bottom-0 flex flex-row p-4 max-w-full">
           <input
             type="text"
-            placeholder="Enter Room No.."
-            value={room}
-            readOnly
-            className="text-blue-700 flex flex-row justify-center items-center p-3 rounded-l-lg focus:bg-blue-300 font-chakra"
+            placeholder="Enter Message.."
+            onChange={(e) => setMessage(e.target.value)}
+            value={message}
+            className="py-3 w-9/12 border-2 border-blue-300 text-blue-600 px-3 focus:bg-blue-300 rounded-l-xl font-chakra text-xl font-bold"
           />
-          <button
-            onClick={leaveRoom}
-            className="bg-[#1d54c9] text-white rounded-xl py-3 px-2 font-chakra"
-          >
-            Leave Room
-          </button>
-        </div>
-        <div
-          className="p-4"
-          style={{ display: "flex", flexDirection: "column" }}
-        >
-          {messageReceived.map((obj, index) => (
-            <div
-              key={index}
-              className="text-blue-300 bg-blue-500 rounded-xl m-3 p-3 text-4xl font-chakra shadow-xl shadow-pink-500"
-              style={{
-                alignSelf:
-                  obj.senderName === user.name ? "flex-end" : "flex-start",
-                background:
-                  obj.senderName === user.name ? "#1d54c9" : "#121636",
-                color: "white",
-              }}
+          {isAuth && (
+            <button
+              onClick={sendMessage}
+              className="bg-[#1d54c9] text-white rounded-r-xl px-3 font-chakra"
             >
-              <h1 className="text-pink-500 text-3xl font-bold">
-                {obj.senderName}
-              </h1>
-              {obj.message}
-            </div>
-          ))}
+              Send Message
+            </button>
+          )}
         </div>
       </div>
-      <div className="fixed bottom-0 flex flex-row p-4 max-w-full">
-        <input
-          type="text"
-          placeholder="Enter Message.."
-          onChange={(e) => setMessage(e.target.value)}
-          value={message}
-          className="py-3 w-9/12 border-2 border-blue-300 text-blue-600 px-3 focus:bg-blue-300 rounded-l-xl font-chakra text-xl font-bold"
-        />
-        {isAuth && (
-          <button
-            onClick={sendMessage}
-            className="bg-[#1d54c9] text-white rounded-r-xl px-3 font-chakra"
-          >
-            Send Message
-          </button>
-        )}
-      </div>
-    </div>
+    </>
   );
 }
 

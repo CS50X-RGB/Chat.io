@@ -4,16 +4,17 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import Footer from "../Components/Footer";
-import { useDispatch,useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login } from "../features/cart/authSlice";
 
 export default function Register() {
   const dispatch = useDispatch();
-const { isAuth } = useSelector((state) => state.auth);
+  const { isAuth } = useSelector((state) => state.auth);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [image, setImage] = useState(null);
   const handleNameChange = (e) => {
     setName(e.target.value);
   };
@@ -36,6 +37,7 @@ const { isAuth } = useSelector((state) => state.auth);
           name,
           email,
           password,
+          image,
         },
         {
           headers: {
@@ -53,7 +55,7 @@ const { isAuth } = useSelector((state) => state.auth);
       }
       dispatch(login());
       console.log(isAuth);
-      navigate('/');
+      navigate("/");
     } catch (error) {
       toast.custom((t) => (
         <div className="border-2 border-white bg-gradient-to-tr from-red-400 to-red-700 text-white font-chakra p-3 rounded-md">
@@ -63,9 +65,26 @@ const { isAuth } = useSelector((state) => state.auth);
     }
   };
 
+  const convertToBase64 = (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+
+      reader.onload = () => {
+        setImage(reader.result);
+      };
+
+      reader.onerror = (error) => {
+        console.log("Error: ", error);
+      };
+    }
+  };
+
   return (
     <>
-     <Header/>
+      <Header />
       <div className="bg-[#121636] h-screen flex flex-col items-center justify-center shadow-xl shadow-black rounded-b-xl">
         {name !== "" ? (
           <h1 className="text-center font-chakra text-4xl text-blue-500 p-5">
@@ -83,6 +102,28 @@ const { isAuth } = useSelector((state) => state.auth);
             className="justify-center flex flex-col gap-3 py-5 items-center shadow-xl shadow-blue-300 p-4 text-xl rounded-r-2xl"
             onSubmit={handleRegister}
           >
+            <div className="rounded-full flex items-center p-4 justify-center border border-pink-300 drop-shadow-xl">
+              {image ? (
+                <img
+                  src={image}
+                  alt="ProfileImage"
+                  className="rounded-full h-full w-full"
+                />
+              ) : (
+                <label htmlFor="profile-pic-input" className="cursor-pointer">
+                  <span className="text-gray-400">
+                    Put your Profile Pic here
+                  </span>
+                  <input
+                    id="profile-pic-input"
+                    type="file"
+                    accept="image/*"
+                    onChange={convertToBase64}
+                    className="sr-only"
+                  />
+                </label>
+              )}
+            </div>
             <input
               type="text"
               value={name}
