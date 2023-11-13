@@ -20,9 +20,8 @@ export default function SideBar() {
           withCredentials: true,
         })
         .then((response) => {
-          console.log(response.data);
           setUser(response.data.user);
-          setProfileImage(response.data.user.profileImage); // Corrected the property access
+          setProfileImage(response.data.user.profileImage); 
         })
         .catch((error) => {
           console.error("Error fetching user profile:", error);
@@ -31,11 +30,11 @@ export default function SideBar() {
   }, [isAuth]);
 
   return (
-    <div className="bg-[#121636] w-1/12 h-screen p-2 rounded-2xl m-6 justify-center gap-4 flex flex-col shadow-xl shadow-pink-500">
+    <div className="bg-[#121636] w-1/12 h-screen p-2 rounded-2xl m-6 justify-around gap-4 flex flex-col shadow-xl shadow-pink-500">
       {profileImage && (
-        <img src={profileImage} className="rounded-full" alt="profilePic" />
+        <img src={profileImage} className="flex flex-start w-full shadow-2xl shadow-pink-800 rounded-full" alt="profilePic" />
       )}
-      <div className="text-blue-400 text-center flex flex-col justify-around">
+      <div className="text-blue-400 text-center flex flex-col justify-center">
         {isAuth && user ? (
           <h1 className="text-xl font-chakra mb-4">Hi! {user.name}</h1>
         ) : null}

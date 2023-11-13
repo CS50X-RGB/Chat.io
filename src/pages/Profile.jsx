@@ -25,7 +25,6 @@ const Profile = () => {
             }
           );
           setUser(response.data.user);
-
           if (response.data.user) {
             const chatResponse = await axios.get(
               `http://localhost:3001/api/v1.1/chat/${response.data.user._id}`,
@@ -72,6 +71,16 @@ const Profile = () => {
             <div className="flex p-[2rem] flex-col justify-center items-center">
               {isAuth && user ? (
                 <>
+                  {user.profileImage ? (
+                    <img
+                      src={user.profileImage}
+                      alt={user.profileImage}
+                      className="m-7 border-2 rounded-3xl border-pink-300"
+                    />
+                  ) : (
+                    <h1>No Profile Image</h1>
+                  )}
+
                   <h1 className="text-5xl font-ostwald">Hi {user.name}!</h1>
                   <h1 className="font-ostwald">How're you doin'?</h1>
                   {user.createdAt && (
@@ -104,7 +113,7 @@ const Profile = () => {
                   >
                     Room id : {room}
                     <h1 className="text-sm font-ostwald">
-                      Chatters in the room : 
+                      Chatters in the room :
                     </h1>
                     <div className="overflow-y ring-2 ring-pink-300 rounded-xl p-2">
                       {chatters.map((talker, talkerId) => (

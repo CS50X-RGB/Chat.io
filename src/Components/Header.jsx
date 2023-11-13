@@ -10,7 +10,7 @@ export default function Header() {
   const { isAuth } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const [image, setImage] = useState(null);
   const [userName, setUserName] = useState("");
 
   useEffect(() => {
@@ -24,6 +24,7 @@ export default function Header() {
         })
         .then((response) => {
           setUserName(response.data.user.name);
+          setImage(response.data.user.profileImage);
         })
         .catch((error) => {
           console.error("Error fetching user profile:", error);
@@ -74,6 +75,13 @@ export default function Header() {
               <h1 className="text-white font-chakra p-3">
                 Welcome!! {userName.toString().toUpperCase()}
               </h1>
+              {image && (
+                <img
+                  className="w-20 h-20 rounded-full border-4 shadow-full shadow-pink-800"
+                  src={image}
+                  alt="profileImage"
+                />
+              )}
               <Link
                 to="/myProfile"
                 className="text-blue-500 bg-white font-chakra rounded-lg px-4 py-3 flex justify-center items-center hover:bg-blue-500 hover:text-white"

@@ -78,9 +78,9 @@ export function Login() {
 
   return (
     <>
-      <div className="bg-[#121636] shadow-xl shadow-black rounded-b-xl">
-        <Header />
-        <h1 className="flex justify-center text-4xl p-5 font-chakra text-blue-400">Login</h1>
+    <Header/>
+      <div className="bg-[#121636] pt-[10rem] shadow-xl shadow-black rounded-b-xl">
+        <h1 className="flex justify-center items-center text-4xl p-5 font-chakra text-blue-400">Login</h1>
         <div className="flex p-7 flex-row gap-8 justify-center">
           <div className="p-10 text-2xl font-chakra rounded-l-xl text-white flex items-center justify-center bg-gradient-to-tr from-blue-500 via-teal-400 to-black">
             <h1 className="flex flex-col justify-center">
