@@ -4,8 +4,12 @@ import axios from "axios";
 import Header from "../Components/Header";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 function LeaveRoomAndSendMessage({ socket }) {
+  const { state } = useLocation();
+  const { selectedColor } = state || { selectedColor: "black" };
+
   const [message, setMessage] = useState("");
   const [messageReceived, setMessageReceived] = useState([]);
   const [room, setRoom] = useState("");
@@ -25,19 +29,53 @@ function LeaveRoomAndSendMessage({ socket }) {
           withCredentials: true,
         }
       );
-      console.log(response.data.content);
-  
+
       // Exclude the last message sent by the current user
       const filteredMessages = response.data.content.filter(
         (msg) => !(msg.senderName === user.name && msg.message === message)
       );
-      console.log(filteredMessages);
+
       setMessageReceived(filteredMessages);
     } catch (error) {
       console.log(error);
     }
   };
-  
+
+  const getUserData = async (senderName) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3001/api/v1.1/users/getUser/${senderName}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching user data for ${senderName}:`, error);
+      return null;
+    }
+  };
+
+  const leaveRoom = () => {
+    if (room !== "") {
+      socket.emit("leave_room", room);
+      alert(`Room no. ${room} Left`);
+      setMessage("");
+      setMessageReceived([]);
+      navigate("/join");
+    }
+  };
+
+  const sendMessage = () => {
+    if (message !== "" && room !== "") {
+      socket.emit("send_message", { message, room, sender: user.name });
+      setMessage("");
+    }
+  };
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -52,7 +90,6 @@ function LeaveRoomAndSendMessage({ socket }) {
           }
         );
 
-        console.log("user data", response.data.user);
         setUser(response.data.user);
       } catch (error) {
         console.error("Error fetching user profile:", error);
@@ -63,17 +100,14 @@ function LeaveRoomAndSendMessage({ socket }) {
   }, []);
 
   useEffect(() => {
-    // Set isMounted to true when the component mounts
     setIsMounted(true);
 
-    // Cleanup function to set isMounted to false when the component unmounts
     return () => {
       setIsMounted(false);
     };
   }, []);
 
   useEffect(() => {
-    console.log("----------roomno useEffect called------------");
     setRoom(roomno);
     if (roomno !== "") {
       socket.emit("join_room", roomno);
@@ -88,28 +122,8 @@ function LeaveRoomAndSendMessage({ socket }) {
     };
   }, [roomno, socket]);
 
-  const leaveRoom = () => {
-    if (room !== "") {
-      socket.emit("leave_room", room);
-      alert(`Room no. ${room} Left`);
-      setMessage("");
-      setMessageReceived([]);
-      navigate("/join");
-    }
-  };
-
-  const sendMessage = () => {
-    if (message !== "" && room !== "") {
-      console.log("Sending message:", message);
-      socket.emit("send_message", { message, room, sender: user.name });
-      setMessage("");
-    }
-  };
-
   useEffect(() => {
-    console.log("---------setMessageReceived useEffect called-----------");
     const handleReceivedMessage = (data) => {
-      console.log("msg from server", data);
       setMessageReceived((prevMessages) => [...prevMessages, { ...data }]);
     };
 
@@ -122,53 +136,33 @@ function LeaveRoomAndSendMessage({ socket }) {
   }, [socket]);
 
   useEffect(() => {
-    console.log("-----------setMessageList useEffect called--------------");
-    const getUserData = async (senderName) => {
-      try {
-        const response = await axios.get(
-          `http://localhost:3001/api/v1.1/users/getUser/${senderName}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-            withCredentials: true,
-          }
-        );
-    
-        return response.data;
-      } catch (error) {
-        console.error(`Error fetching user data for ${senderName}:`, error);
-        return null;
-      }
-    };
-    const fetchUserDataForMessages = async () => {
-      // Check if the component is mounted before executing the logic
-      if (isMounted) {
+    // Check if the component is mounted before executing the logic
+    if (isMounted && messageReceived.length > 0) {
+      const fetchUserDataForMessages = async () => {
         const userDataSet = new Set();
 
         for (const obj of messageReceived) {
           if (obj.senderName !== user.name) {
             const userData = await getUserData(obj.senderName);
-            console.log(userData);
             if (userData && userData._id) {
               userDataSet.add(userData._id);
             }
           }
         }
 
-        console.log(Array.from(userDataSet));
         if (userDataSet.size === 0) {
           console.log("No receivers are there");
         }
 
         try {
-          console.log(messageReceived[[messageReceived.length - 1]]);
+          const lastMessage = messageReceived[messageReceived.length - 1];
+
           const response = await axios.post(
             `http://localhost:3001/api/v1.1/chat/chat/${id}/${roomno}`,
             {
               content: {
-                senderName: messageReceived[messageReceived.length - 1].senderName,
-                message: messageReceived[messageReceived.length - 1].message,
+                senderName: lastMessage.senderName,
+                message: lastMessage.message,
               },
               receivers: Array.from(userDataSet),
             },
@@ -190,19 +184,29 @@ function LeaveRoomAndSendMessage({ socket }) {
         } catch (error) {
           console.error("Error adding user to the database:", error);
         }
-      }
-    };
+      };
 
-    fetchUserDataForMessages();
+      fetchUserDataForMessages();
+    }
   }, [messageReceived, roomno, id, user, isMounted]);
 
   const isAuth = JSON.parse(localStorage.getItem("auth")) || false;
-  console.log("isAuth", isAuth);
-
+  console.log(selectedColor);
   return (
     <>
       <Header />
-      <div className="bg-[#121636] min-h-screen">
+
+      <div
+        className={`min-h-screen ${
+          selectedColor === "black"
+            ? "bg-black"
+            : selectedColor === "cyan"
+            ? "bg-cyan-500"
+            : selectedColor === "red"
+            ? "bg-red-800/90"
+            : "bg-[#121636]"
+        }`}
+      >
         <div className="pt-[10rem] px-4">
           <div className="p-3 flex flex-row justify-between">
             <input

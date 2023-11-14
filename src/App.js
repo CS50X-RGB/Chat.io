@@ -16,7 +16,6 @@ export const userServer = `http://localhost:3001/api/v1.1/users`;
 
 export default function App() {
   const { isAuth } = useSelector((state) => state.auth);
-
   return (
     <>
       <Routes>
