@@ -4,7 +4,7 @@ export default function Footer() {
   return (
     <>
       <div className="flex flex-col space-y-7 font-chakra bg-black text-white items-center justify-center flex-end">
-        <div className="flex bg-blue-800/60 p-5 my-5 rounded-2xl  flex-row justify-center gap-4">
+        <div className="flex m-2 bg-blue-800/60 p-5 my-5 rounded-2xl  flex-row justify-center gap-4">
           <div className="flex flex-col space-y-4">
             <h1 className="text-xl font-bold md:text-4xl flex flex-col justify-start text-left">
               If you want to contact me

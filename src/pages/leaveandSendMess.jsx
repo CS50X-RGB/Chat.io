@@ -192,23 +192,60 @@ function LeaveRoomAndSendMessage({ socket }) {
 
   const isAuth = JSON.parse(localStorage.getItem("auth")) || false;
   console.log(selectedColor);
+  const getMessageColor = (a, b) => {
+    switch (selectedColor) {
+      case "red":
+        if (a === b) {
+          return "#ff69b4";
+        }
+        return "#15EAE3";
+      case "pink":
+        if (a === b) {
+          return "#10ef2a";
+        }
+        return "#9700ff";
+      case "cyan":
+        if (a === b) {
+          return "#DF2024";
+        }
+        return "#0FF0D3";
+      case "black":
+        if (a === b) {
+          return "#F6F906";
+        }
+        return "#42E863";
+      default:
+        if (a === b) {
+          return "blue";
+        }
+        return "#121636";
+    }
+  };
+  const setTheme = () => {
+    switch (selectedColor) {
+      case "black":
+        return "bg-black";
+      case "cyan":
+        return "bg-cyan-500";
+      case "red":
+        return "bg-red-800";
+      case "pink":
+        return "bg-pink-500";
+      default:
+        return "bg-[#121636]";
+    }
+  };
   return (
     <>
       <Header />
 
       <div
         className={`min-h-screen ${
-          selectedColor === "black"
-            ? "bg-black"
-            : selectedColor === "cyan"
-            ? "bg-cyan-500"
-            : selectedColor === "red"
-            ? "bg-red-800/90"
-            : "bg-[#121636]"
+          setTheme()
         }`}
       >
         <div className="pt-[10rem] px-4">
-          <div className="p-3 flex flex-row justify-between">
+          <div className="fixed p-3 flex flex-row justify-between">
             <input
               type="text"
               placeholder="Enter Room No.."
@@ -218,7 +255,7 @@ function LeaveRoomAndSendMessage({ socket }) {
             />
             <button
               onClick={leaveRoom}
-              className="bg-[#1d54c9] text-white rounded-xl py-3 px-2 font-chakra"
+              className={`${setTheme()} text-white rounded-xl py-3 px-2 font-chakra`}
             >
               Leave Room
             </button>
@@ -234,14 +271,23 @@ function LeaveRoomAndSendMessage({ socket }) {
                 style={{
                   alignSelf:
                     obj.senderName === user.name ? "flex-end" : "flex-start",
-                  background:
-                    obj.senderName === user.name ? "#1d54c9" : "#121636",
+                  background: getMessageColor(obj.senderName, user.name),
                   color: "white",
                 }}
               >
-                <h1 className="text-pink-500 text-3xl font-bold">
+                <h1
+                  className={`${
+                    selectedColor === "red"
+                      ? "text-white"
+                      : selectedColor === "black"
+                      ? "text-green-500"
+                      : selectedColor === "cyan"
+                      ? "text-red-500" : "text-pink-500"
+                  }  text-3xl font-bold`}
+                >
                   {obj.senderName}
                 </h1>
+
                 {obj.message}
               </div>
             ))}
@@ -258,7 +304,7 @@ function LeaveRoomAndSendMessage({ socket }) {
           {isAuth && (
             <button
               onClick={sendMessage}
-              className="bg-[#1d54c9] text-white rounded-r-xl px-3 font-chakra"
+              className={`${setTheme()} text-white rounded-r-xl px-3 font-chakra`}
             >
               Send Message
             </button>

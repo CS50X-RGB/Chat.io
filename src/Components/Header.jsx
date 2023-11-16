@@ -69,7 +69,7 @@ export default function Header() {
     <div className="fixed top-0 left-0 w-full z-20 shadow-lg shadow-pink-300">
       <div className="max-w-full flex justify-between p-6 bg-[#121636]">
         <Link to={"/"} className="flex flex-col">
-          <h1 className="flex px-1 flex-row gap-3 text-blue-500 text-4xl font-chakra text-center">
+          <h1 className="flex px-1 flex-row gap-3 text-blue-500 text-3xl md:text-4xl font-chakra text-center">
             <img src={logo} className="w-10 h-10" alt="logo" />
             RohanChat.io
           </h1>
@@ -124,19 +124,24 @@ export default function Header() {
         </div>
         <div className="md:hidden">
           <RxHamburgerMenu
-            className="cursor-pointer"
+            className="cursor-pointer text-pink-500"
             onClick={handleMenuToggle}
             size={40}
           />
         </div>
         {open && (
-          <div className="md:hidden top-[100px] left-0 absolute w-full p-5 flex flex-col gap-4 bg-[#121636]">
+          <div className="md:hidden z-20 shadow-2xl shadow-pink-500 top-[100px] left-0 absolute w-full p-5 flex flex-col gap-4 bg-[#121636]">
             {image && (
-              <img
-                className="w-20 h-20 rounded-full border-4 shadow-full shadow-pink-800"
-                src={image}
-                alt="profileImage"
-              />
+              <div className="flex flex-row gap-[3rem]">
+                <img
+                  className="w-20 h-20 rounded-full border-4 shadow-full shadow-pink-800"
+                  src={image}
+                  alt="profileImage"
+                />
+                <h1 className="text-white font-chakra p-3">
+                  Welcome!! {userName.toString().toUpperCase()}
+                </h1>
+              </div>
             )}
             {isAuth ? (
               <Link

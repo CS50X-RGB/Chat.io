@@ -63,7 +63,7 @@ export default function SideBar() {
           </Link>
         </div>
       </div>
-      <div className="flex bg-blue-400 flex-row justify-around md:hidden fixed  bottom-0">
+      <div className="flex bg-blue-500 z-10 rounded-t-3xl shadow-xl shadow-black p-[1rem] flex-row justify-around md:hidden fixed  bottom-0">
         {profileImage && (
           <img
             src={profileImage}
@@ -71,7 +71,7 @@ export default function SideBar() {
             alt="profilePic"
           />
         )}
-        <div className="text-pink-700 p-1 text-center flex gap-5 flex-1 flex-row justify-center items-center">
+        <div className="text-pink-700 p-1 text-center text-2xl font-semibold font-ostwald flex gap-5 flex-1 flex-row justify-center items-center">
           <Link
             to={"/join"}
             className="flex flex-col items-center cursor-pointer"

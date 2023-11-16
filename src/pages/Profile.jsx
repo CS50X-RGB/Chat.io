@@ -65,23 +65,23 @@ const Profile = () => {
     <>
       <Header />
       <div className="bg-[#121636] pt-[5rem]">
-        <div className="flex justify-around flex-row gap-3">
+        <div className="flex m-[2rem] flex-col md:flex-row justify-around  gap-3">
           {isAuth && <SideBar />}
-          <div className="flex justify-around m-[2rem] flex-row flex-1 text-white rounded-2xl shadow-2xl shadow-pink-300 bg-cyan-400/30 my-[6rem] text-center w-1/2 max-h-[25%]">
-            <div className="flex p-[2rem] flex-col justify-center items-center">
+          <div className="flex justify-around flex-row flex-1 text-white rounded-2xl shadow-2xl shadow-pink-300 bg-cyan-400/30 my-[6rem] text-center w-full md:w-1/2 max-h-[25%]">
+            <div className="flex p-[1rem] md:p-[2rem] flex-col justify-center items-center">
               {isAuth && user ? (
                 <>
                   {user.profileImage ? (
                     <img
                       src={user.profileImage}
                       alt={user.profileImage}
-                      className="m-7 border-2 rounded-3xl border-pink-300"
+                      className="m-7 w-full border-2 rounded-full border-pink-300"
                     />
                   ) : (
                     <h1>No Profile Image</h1>
                   )}
 
-                  <h1 className="text-5xl font-ostwald">Hi {user.name}!</h1>
+                  <h1 className="text-3xl md:text-5xl font-ostwald">Hi {user.name}!</h1>
                   <h1 className="font-ostwald">How're you doin'?</h1>
                   {user.createdAt && (
                     <h1>
@@ -89,7 +89,7 @@ const Profile = () => {
                     </h1>
                   )}
                   <div className="flex p-6 flex-col justify-center items-center">
-                    <h1 className="text-3xl font-ostwald">
+                    <h1 className="text-xl md:text-3xl font-ostwald">
                       No. of rooms joined are : {recivers.length}
                     </h1>
                   </div>
@@ -100,11 +100,11 @@ const Profile = () => {
             </div>
             <div className="flex flex-end bg-gradient-to-r from-blue-300 via-cyan-500 to-pink-500 shadow-top-left shadow-2xl bg-blend-darken mix-blend-normal brightness-110 blur w-[10rem] rounded-r-full"></div>
           </div>
-          <div className="flex justify-around flex-row flex-1 text-white rounded-2xl shadow-2xl shadow-pink-300 bg-cyan-400/30 my-[6rem] text-center w-1/2 max-h-[25%]">
+          <div className="flex justify-around flex-row flex-1 text-white rounded-2xl shadow-2xl shadow-pink-300 bg-cyan-400/30 my-[6rem] text-center w-full md:w-1/2 max-h-[25%]">
             <div className="flex p-[2rem] font-ostwald flex-col justify-center items-center">
-              <h1 className="text-5xl">History</h1>
-              <h3 className="text-3xl flex">See Your Joined Room: </h3>
-              <div className="grid grid-cols-2 gap-4">
+              <h1 className="text-2xl md:text-5xl">History</h1>
+              <h3 className="text-lg md:text-3xl flex">See Your Joined Room: </h3>
+              <div className="grid grid-rows-2 md:grid-cols-2 gap-4">
                 {recivers.map((room, id) => (
                   <Link
                     key={id}
@@ -124,7 +124,7 @@ const Profile = () => {
                 ))}
               </div>
             </div>
-            <div className="flex flex-end bg-gradient-to-r from-blue-300 via-cyan-500 to-pink-500 shadow-top-left shadow-2xl bg-blend-darken mix-blend-normal brightness-110 blur w-[10rem] rounded-r-full"></div>
+            <div className="flex flex-end bg-gradient-to-r from-blue-300 via-cyan-500 to-pink-500 shadow-top-left shadow-2xl bg-blend-darken mix-blend-normal brightness-110 blur w-[5rem] md:w-[10rem] rounded-r-full"></div>
           </div>
         </div>
       </div>
