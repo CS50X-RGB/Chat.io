@@ -3,8 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import Header from "../Components/Header";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function LeaveRoomAndSendMessage({ socket }) {
   const { state } = useLocation();
@@ -30,7 +29,6 @@ function LeaveRoomAndSendMessage({ socket }) {
         }
       );
 
-      // Exclude the last message sent by the current user
       const filteredMessages = response.data.content.filter(
         (msg) => !(msg.senderName === user.name && msg.message === message)
       );
@@ -111,12 +109,9 @@ function LeaveRoomAndSendMessage({ socket }) {
     setRoom(roomno);
     if (roomno !== "") {
       socket.emit("join_room", roomno);
-
-      // Fetch messages when the component mounts
       getMessages();
     }
 
-    // Cleanup socket subscription
     return () => {
       socket.off("r-m");
     };
@@ -129,69 +124,65 @@ function LeaveRoomAndSendMessage({ socket }) {
 
     socket.on("r-m", handleReceivedMessage);
 
-    // Cleanup socket subscription
     return () => {
       socket.off("r-m", handleReceivedMessage);
     };
   }, [socket]);
 
-  useEffect(() => {
-    // Check if the component is mounted before executing the logic
-    if (isMounted && messageReceived.length > 0) {
-      const fetchUserDataForMessages = async () => {
-        const userDataSet = new Set();
+  const fetchUserDataForMessages = async () => {
+    console.log("Data sent");
+    const userDataSet = new Set();
 
-        for (const obj of messageReceived) {
-          if (obj.senderName !== user.name) {
-            const userData = await getUserData(obj.senderName);
-            if (userData && userData._id) {
-              userDataSet.add(userData._id);
-            }
-          }
+    for (const obj of messageReceived) {
+      if (obj.senderName !== user.name) {
+        const userData = await getUserData(obj.senderName);
+        if (userData && userData._id) {
+          userDataSet.add(userData._id);
         }
-
-        if (userDataSet.size === 0) {
-          console.log("No receivers are there");
-        }
-
-        try {
-          const lastMessage = messageReceived[messageReceived.length - 1];
-
-          const response = await axios.post(
-            `http://localhost:3001/api/v1.1/chat/chat/${id}/${roomno}`,
-            {
-              content: {
-                senderName: lastMessage.senderName,
-                message: lastMessage.message,
-              },
-              receivers: Array.from(userDataSet),
-            },
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-              withCredentials: true,
-            }
-          );
-
-          if (response && response.data) {
-            toast.custom((t) => (
-              <div className="border-2 border-black bg-gradient-to-tr from-green-500 via-green-600 to-green-700 text-black font-chakra p-3 rounded-md">
-                <strong>Success: </strong> {response.data.message}
-              </div>
-            ));
-          }
-        } catch (error) {
-          console.error("Error adding user to the database:", error);
-        }
-      };
-
-      fetchUserDataForMessages();
+      }
     }
-  }, [messageReceived, roomno, id, user, isMounted]);
+
+    if (userDataSet.size === 0) {
+      console.log("No receivers are there");
+    }
+
+    try {
+      const lastMessage = messageReceived[messageReceived.length - 1];
+
+      if (isMounted) {
+        const response = await axios.post(
+          `http://localhost:3001/api/v1.1/chat/chat/${id}/${roomno}`,
+          {
+            content: {
+              senderName: lastMessage.senderName,
+              message: lastMessage.message,
+            },
+            receivers: Array.from(userDataSet),
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          }
+        );
+
+        if (response && response.data) {
+          toast.custom((t) => (
+            <div className="border-2 border-black bg-gradient-to-tr from-green-500 via-green-600 to-green-700 text-black font-chakra p-3 rounded-md">
+              <strong>Success: </strong> {response.data.message}
+            </div>
+          ));
+        }
+      }
+    } catch (error) {
+      console.error("Error adding user to the database:", error);
+    }
+    fetchUserDataForMessages();
+  };
 
   const isAuth = JSON.parse(localStorage.getItem("auth")) || false;
-  console.log(selectedColor);
+
   const getMessageColor = (a, b) => {
     switch (selectedColor) {
       case "red":
@@ -221,6 +212,7 @@ function LeaveRoomAndSendMessage({ socket }) {
         return "#121636";
     }
   };
+
   const setTheme = () => {
     switch (selectedColor) {
       case "black":
@@ -235,15 +227,12 @@ function LeaveRoomAndSendMessage({ socket }) {
         return "bg-[#121636]";
     }
   };
+
   return (
     <>
       <Header />
 
-      <div
-        className={`min-h-screen ${
-          setTheme()
-        }`}
-      >
+      <div className={`min-h-screen ${setTheme()}`}>
         <div className="pt-[10rem] px-4">
           <div className="fixed p-3 flex flex-row justify-between">
             <input
@@ -267,7 +256,7 @@ function LeaveRoomAndSendMessage({ socket }) {
             {messageReceived.map((obj, index) => (
               <div
                 key={index}
-                className="text-blue-300 bg-blue-500 rounded-xl m-3 p-3 text-4xl font-chakra shadow-xl shadow-pink-500"
+                className="text-blue-300  bg-blue-500 rounded-xl m-3 p-3 text-4xl font-chakra shadow-xl shadow-pink-500"
                 style={{
                   alignSelf:
                     obj.senderName === user.name ? "flex-end" : "flex-start",
@@ -282,7 +271,8 @@ function LeaveRoomAndSendMessage({ socket }) {
                       : selectedColor === "black"
                       ? "text-green-500"
                       : selectedColor === "cyan"
-                      ? "text-red-500" : "text-pink-500"
+                      ? "text-red-500"
+                      : "text-pink-500"
                   }  text-3xl font-bold`}
                 >
                   {obj.senderName}

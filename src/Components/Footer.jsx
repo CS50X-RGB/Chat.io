@@ -4,7 +4,7 @@ export default function Footer() {
   return (
     <>
       <div className="flex flex-col space-y-7 font-chakra bg-black text-white items-center justify-center flex-end">
-        <div className="flex m-2 bg-blue-800/60 p-5 my-5 rounded-2xl  flex-row justify-center gap-4">
+        <div className="flex m-5 bg-blue-800/60 p-5 my-5 rounded-2xl  flex-row justify-center gap-4">
           <div className="flex flex-col space-y-4">
             <h1 className="text-xl font-bold md:text-4xl flex flex-col justify-start text-left">
               If you want to contact me
@@ -20,8 +20,8 @@ export default function Footer() {
             </a>
           </div>
         </div>
-        <div className="flex flex-col justify-center p-5">
-          <div className="flex flex-col text-center text-xl md:text-2xl">
+        <div className="flex flex-col justify-center">
+          <div className="flex flex-col text-center text-sm md:text-2xl">
               I love Open sourcing if you found any bug lets fix it together
             <div class="flex justify-center items-center gap-3 md:gap-6 flex-row">
               <Link
