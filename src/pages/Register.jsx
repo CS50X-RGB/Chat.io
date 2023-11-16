@@ -94,7 +94,7 @@ export default function Register() {
           ""
         )}
         <div className="flex p-4 flex-col md:flex-row gap-8 justify-center rounded-xl">
-          <div className="text-white font-chakra text-2xl text-center rounded-l-2xl p-5 flex flex-row md:flex-col justify-center items-center bg-gradient-to-bl from-blue-300 via-pink-400 to-blue-500">
+          <div className="hidden md:flex text-white font-chakra text-2xl text-center rounded-l-2xl p-5 flex-row md:flex-col justify-center items-center bg-gradient-to-bl from-blue-300 via-pink-400 to-blue-500">
             Register here to get the seamless Chatting experience
             <p>Create rooms and talk with your friends endlessly</p>
           </div>

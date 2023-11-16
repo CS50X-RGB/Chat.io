@@ -79,17 +79,17 @@ export function Login() {
   return (
     <>
     <Header/>
-      <div className="bg-[#121636] pt-[10rem] shadow-xl shadow-black rounded-b-xl">
+      <div className="bg-[#121636] pt-[10rem] p-[1rem] md:p-[3rem] shadow-xl shadow-black rounded-b-xl">
         <h1 className="flex justify-center items-center text-4xl p-5 font-chakra text-blue-400">Login</h1>
-        <div className="flex p-7 flex-row gap-8 justify-center">
-          <div className="p-10 text-2xl font-chakra rounded-l-xl text-white flex items-center justify-center bg-gradient-to-tr from-blue-500 via-teal-400 to-black">
+        <div className="flex p-2 md:p-7 flex-row gap-8 justify-center">
+          <div className="hidden p-10 text-2xl font-chakra rounded-l-xl text-white md:flex items-center justify-center bg-gradient-to-tr from-blue-500 via-teal-400 to-black">
             <h1 className="flex flex-col justify-center">
               Hi lets login and start your chatting journey
               <p className="flex justify-center">Your chatting solution</p>
             </h1>
           </div>
           <form
-            className="justify-center flex flex-col gap-3 py-5 items-center shadow-xl text-2xl rounded-r-xl shadow-blue-400 p-4"
+            className="justify-center w-[80%] flex flex-col gap-3 py-5 items-center shadow-xl text-2xl rounded-r-xl shadow-blue-400 p-2 md:p-4"
             onSubmit={handleLogin}
           >
             <input
@@ -97,14 +97,14 @@ export function Login() {
               placeholder="Your Email"
               value={state.email}
               onChange={handleEmailChange}
-              className="p-3 border-2 rounded-md border-blue-400"
+              className="w-full p-3 border-2 rounded-md border-blue-400"
             />
             <input
               type="password"
               placeholder="Your Password"
               value={state.password}
               onChange={handlePasswordChange}
-              className="p-3 border-2 rounded-md border-blue-400"
+              className="w-full p-3 border-2 rounded-md border-blue-400"
             />
             <div className="flex  flex-col text-xl gap-2 justify-center">
               <button className="text-blue-400 p-3 bg-white hover:bg-blue-400 hover:text-white rounded-lg px-5 py-2">

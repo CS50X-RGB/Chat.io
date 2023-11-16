@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { logout } from "../features/cart/authSlice";
 import logo from "../assests/logo.png";
+import { RxHamburgerMenu } from "react-icons/rx";
 
 export default function Header() {
   const { isAuth } = useSelector((state) => state.auth);
@@ -12,6 +13,7 @@ export default function Header() {
   const navigate = useNavigate();
   const [image, setImage] = useState(null);
   const [userName, setUserName] = useState("");
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (isAuth) {
@@ -59,6 +61,10 @@ export default function Header() {
     }
   };
 
+  const handleMenuToggle = () => {
+    setOpen(!open);
+  };
+
   return (
     <div className="fixed top-0 left-0 w-full z-20 shadow-lg shadow-pink-300">
       <div className="max-w-full flex justify-between p-6 bg-[#121636]">
@@ -69,7 +75,7 @@ export default function Header() {
           </h1>
           <p className="text-sm text-start text-blue-500">Let's Chat</p>
         </Link>
-        <div className="flex gap-4">
+        <div className="hidden md:flex gap-4">
           {isAuth ? (
             <>
               <h1 className="text-white font-chakra p-3">
@@ -116,6 +122,60 @@ export default function Header() {
             </Link>
           )}
         </div>
+        <div className="md:hidden">
+          <RxHamburgerMenu
+            className="cursor-pointer"
+            onClick={handleMenuToggle}
+            size={40}
+          />
+        </div>
+        {open && (
+          <div className="md:hidden top-[100px] left-0 absolute w-full p-5 flex flex-col gap-4 bg-[#121636]">
+            {image && (
+              <img
+                className="w-20 h-20 rounded-full border-4 shadow-full shadow-pink-800"
+                src={image}
+                alt="profileImage"
+              />
+            )}
+            {isAuth ? (
+              <Link
+                to="/myProfile"
+                className="text-white border-t-2 border-b-2 p-3 border-pink-800 hover:text-blue-500"
+                onClick={() => setOpen(false)}
+              >
+                My Profile
+              </Link>
+            ) : (
+              <Link
+                to="/register"
+                className="text-white border-t-2 border-b-2 p-3 border-pink-800 hover:text-blue-500"
+                onClick={() => setOpen(false)}
+              >
+                Register
+              </Link>
+            )}
+            {isAuth ? (
+              <span
+                className="text-white border-t-2 border-b-2 p-3 border-pink-800 hover:text-blue-500"
+                onClick={() => {
+                  handleLogout();
+                  setOpen(false);
+                }}
+              >
+                Logout
+              </span>
+            ) : (
+              <Link
+                to="/login"
+                className="text-white hover:text-blue-500"
+                onClick={() => setOpen(false)}
+              >
+                Login
+              </Link>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

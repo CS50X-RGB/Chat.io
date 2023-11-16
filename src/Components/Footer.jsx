@@ -6,7 +6,7 @@ export default function Footer() {
       <div className="flex flex-col space-y-7 font-chakra bg-black text-white items-center justify-center flex-end">
         <div className="flex bg-blue-800/60 p-5 my-5 rounded-2xl  flex-row justify-center gap-4">
           <div className="flex flex-col space-y-4">
-            <h1 className="text-4xl flex flex-col  justify-start text-left">
+            <h1 className="text-xl font-bold md:text-4xl flex flex-col justify-start text-left">
               If you want to contact me
             </h1>
             <p className="text-lg">You can mail me here click on the button</p>
@@ -21,11 +21,9 @@ export default function Footer() {
           </div>
         </div>
         <div className="flex flex-col justify-center p-5">
-          <div className="flex flex-col text-center text-2xl">
-            <h1>
+          <div className="flex flex-col text-center text-xl md:text-2xl">
               I love Open sourcing if you found any bug lets fix it together
-            </h1>
-            <div class="flex justify-center items-center gap-6 flex-row">
+            <div class="flex justify-center items-center gap-3 md:gap-6 flex-row">
               <Link
                 to="https://github.com/CS50X-RGB/Chat.io"
                 className="text-pink-300 hover:text-blue-500"
