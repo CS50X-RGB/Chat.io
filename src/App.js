@@ -8,6 +8,7 @@ import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ViewProfile from "./pages/ViewProfile";
 import { Toaster } from "react-hot-toast";
 import { io } from "socket.io-client";
 import "./App.css";
@@ -30,6 +31,7 @@ export default function App() {
               element={<LeaveRoomAndSendMessage socket={socket} />}
             />
             <Route path="/myProfile" element={<Profile />} />
+            <Route path="/profile/:id" element={<ViewProfile/>} />
           </>
         ) : (
           <>

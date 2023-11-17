@@ -81,7 +81,9 @@ const Profile = () => {
                     <h1>No Profile Image</h1>
                   )}
 
-                  <h1 className="text-3xl md:text-5xl font-ostwald">Hi {user.name}!</h1>
+                  <h1 className="text-3xl md:text-5xl font-ostwald">
+                    Hi {user.name}!
+                  </h1>
                   <h1 className="font-ostwald">How're you doin'?</h1>
                   {user.createdAt && (
                     <h1>
@@ -103,24 +105,30 @@ const Profile = () => {
           <div className="flex justify-around flex-row flex-1 text-white rounded-2xl shadow-2xl shadow-pink-300 bg-cyan-400/30 my-[6rem] text-center w-full md:w-1/2 max-h-[25%]">
             <div className="flex p-[2rem] font-ostwald flex-col justify-center items-center">
               <h1 className="text-2xl md:text-5xl">History</h1>
-              <h3 className="text-lg md:text-3xl flex">See Your Joined Room: </h3>
-              <div className="grid grid-rows-2 md:grid-cols-2 gap-4">
+              <h3 className="text-lg md:text-3xl flex">
+                See Your Joined Room:{" "}
+              </h3>
+              <div className="grid grid-rows-2 md:grid-cols-2 p-5 gap-4">
                 {recivers.map((room, id) => (
-                  <Link
-                    key={id}
-                    to={`/chat/${user._id}/${room}`}
-                    className="bg-cyan-500 flex flex-col px-12 py-3 my-3 rounded-full shadow-2xl shadow-pink-700/60"
-                  >
-                    Room id : {room}
-                    <h1 className="text-sm font-ostwald">
-                      Chatters in the room :
-                    </h1>
-                    <div className="overflow-y ring-2 ring-pink-300 rounded-xl p-2">
+                  <>
+                    <Link
+                      key={id}
+                      to={`/chat/${user._id}/${room}`}
+                      className="bg-cyan-500 flex flex-col px-12 py-3 my-3 rounded-full shadow-2xl shadow-pink-700/60"
+                    >
+                      Room id : {room}
+                      <h1 className="text-sm font-ostwald">
+                        Chatters in the room :
+                      </h1>
+                    </Link>
+                    <div className="overflow-y flex flex-col ring-2 ring-pink-300 rounded-xl">
                       {chatters.map((talker, talkerId) => (
-                        <h1 key={talkerId}>{talker}</h1>
+                        <Link to={`/profile/${talker}`} key={talkerId}>
+                          {talker}
+                        </Link>
                       ))}
                     </div>
-                  </Link>
+                  </>
                 ))}
               </div>
             </div>

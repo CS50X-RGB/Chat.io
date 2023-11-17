@@ -6,6 +6,7 @@ import axios from "axios";
 import { logout } from "../features/cart/authSlice";
 import logo from "../assests/logo.png";
 import { RxHamburgerMenu } from "react-icons/rx";
+import { ImProfile } from "react-icons/im";
 
 export default function Header() {
   const { isAuth } = useSelector((state) => state.auth);
@@ -78,7 +79,7 @@ export default function Header() {
         <div className="hidden md:flex gap-4">
           {isAuth ? (
             <>
-              <h1 className="text-white font-chakra p-3">
+              <h1 className="text-pink-500 text-xl font-semibold  font-chakra p-3">
                 Welcome!! {userName.toString().toUpperCase()}
               </h1>
               {image && (
@@ -90,9 +91,10 @@ export default function Header() {
               )}
               <Link
                 to="/myProfile"
-                className="text-blue-500 bg-white font-chakra rounded-lg px-4 py-3 flex justify-center items-center hover:bg-blue-500 hover:text-white"
+                className="text-blue-500  bg-white font-chakra rounded-lg px-4 py-3 flex justify-around gap-4 items-center hover:bg-blue-500 hover:text-white"
               >
                 My Profile
+                <ImProfile size={34}/>
               </Link>
             </>
           ) : (
@@ -106,7 +108,7 @@ export default function Header() {
           {isAuth ? (
             <>
               <span
-                className="text-blue-500 bg-white font-chakra rounded-lg px-4 py-3 flex justify-center items-center hover:bg-blue-500 hover:text-white"
+                className="text-blue-500 bg-white rounded-l-xl rounded-r-xl font-chakra px-4 py-3 flex justify-center items-center hover:bg-blue-500 hover:text-white"
                 onClick={handleLogout}
                 style={{ cursor: "pointer" }}
               >
@@ -116,7 +118,7 @@ export default function Header() {
           ) : (
             <Link
               to="/login"
-              className="text-blue-500 bg-white font-chakra rounded-lg px-4 py-3 flex justify-center items-center hover:bg-blue-500 hover:text-white"
+              className="text-blue-500 rounded-r-full rounded-l-full bg-white font-chakra rounded-lg px-4 py-3 flex justify-center items-center hover:bg-blue-500 hover:text-white"
             >
               Login
             </Link>
@@ -144,9 +146,10 @@ export default function Header() {
               </div>
             )}
             {isAuth ? (
+
               <Link
                 to="/myProfile"
-                className="text-white border-t-2 border-b-2 p-3 border-pink-800 hover:text-blue-500"
+                className="text-white border-t-2 rounded-r-full rounded-l-full border-b-2 p-3 border-pink-800 hover:text-blue-500"
                 onClick={() => setOpen(false)}
               >
                 My Profile
@@ -154,7 +157,7 @@ export default function Header() {
             ) : (
               <Link
                 to="/register"
-                className="text-white border-t-2 border-b-2 p-3 border-pink-800 hover:text-blue-500"
+                className="text-white border-t-2 border-b-2 rounded-r-full rounded-l-full p-3 border-pink-800 hover:text-blue-500"
                 onClick={() => setOpen(false)}
               >
                 Register

@@ -25,7 +25,7 @@ const TypingAnimation = ({ text, speed }) => {
   }, [text, speed]);
   return (
     <motion.div
-      className="text-black"
+      className="text-pink-800 bg-[#7bec39] bg-clip-border-2 bg-clip-border-pink-800 rounded-l-full rounded-r-full px-4"
       initial={{ opacity: 1 }}
       animate={controls}
     >
@@ -49,14 +49,14 @@ export default function Home() {
               Welcome to RohanChat.io –
               <TypingAnimation text="Connect Join Chat" speed={2000} />
             </h1>
-            <p className="text-md font-chakra font-bold text-xl">
+            <p className="text-2xl font-chakra font-bold">
               Chat.io is your go-to platform for connecting with people around
               world and chatting in real-time.
             </p>
           </div>
           <img
             src={image}
-            className="w-1/4 h-1/4 rounded-xl rotate-12 pt-70"
+            className="w-1/4 h-1/4 rounded-xl rotate-6 pt-70"
             alt="ChatappHero"
           />
         </div>

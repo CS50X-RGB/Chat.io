@@ -16,6 +16,7 @@ function LeaveRoomAndSendMessage({ socket }) {
   const [user, setUser] = useState("");
   const navigate = useNavigate();
   const [isMounted, setIsMounted] = useState(false);
+  const [buttonClicked, setButtonClicked] = useState(false);
 
   const getMessages = async () => {
     try {
@@ -69,6 +70,7 @@ function LeaveRoomAndSendMessage({ socket }) {
   };
 
   const sendMessage = () => {
+    setButtonClicked(true);
     if (message !== "" && room !== "") {
       socket.emit("send_message", { message, room, sender: user.name });
       setMessage("");
@@ -178,9 +180,14 @@ function LeaveRoomAndSendMessage({ socket }) {
     } catch (error) {
       console.error("Error adding user to the database:", error);
     }
+    // if(buttonClicked){
+      console.log("Button clicked Message sent to the database");
+    //   fetchUserDataForMessages();
+    // }
     fetchUserDataForMessages();
+    setButtonClicked(false);
   };
-
+  console.log(buttonClicked);
   const isAuth = JSON.parse(localStorage.getItem("auth")) || false;
 
   const getMessageColor = (a, b) => {

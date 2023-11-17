@@ -1,0 +1,34 @@
+.main{
+    height: 100vh;
+  
+    .mask, .body{
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: blue;
+      font-size: 64px;
+      line-height: 66px;
+      cursor: default;
+      
+      p{
+        width: calc(max-width/8);
+        padding:40px;
+        margin: 0px;
+      }
+      span{
+        color: #7bec39;
+      }
+    }
+  
+    .mask{
+      mask-image: url('../../public/backCircle.svg');
+      mask-repeat: no-repeat;
+      mask-size: 40px;
+      background: rgb(57, 236, 66);
+      position: absolute;
+      color: rgb(219, 7, 202);
+      /* overflow: hidden;  */
+    }
+}
