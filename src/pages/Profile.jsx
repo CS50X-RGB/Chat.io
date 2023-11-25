@@ -121,9 +121,9 @@ const Profile = () => {
                         Chatters in the room :
                       </h1>
                     </Link>
-                    <div className="overflow-y flex flex-col ring-2 ring-pink-300 rounded-xl">
+                    <div className="overflow-y space-y-4 flex flex-col items-center justify-center ring-2 ring-pink-300 rounded-xl">
                       {chatters.map((talker, talkerId) => (
-                        <Link to={`/profile/${talker}`} key={talkerId}>
+                        <Link to={`/profile/${talker}`} className="cursor-pointer text-pink-400 border-b-2 border-b-black" key={talkerId}>
                           {talker}
                         </Link>
                       ))}

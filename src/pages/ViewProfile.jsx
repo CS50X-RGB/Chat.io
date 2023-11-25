@@ -1,44 +1,49 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Footer from "../Components/Footer";
 import Header from "../Components/Header";
 
 function ViewProfile() {
   const { id } = useParams();
   const [user, setUser] = useState();
+  const history = useNavigate();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const firstResponse = await axios.get(
-          `http://localhost:3001/api/v1.1/users/getUser/${id}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-            withCredentials: true,
-          }
-        );
+    if (id === 'YOU') {
+      history("/myProfile");
+    } else {
+      const fetchData = async () => {
+        try {
+          const firstResponse = await axios.get(
+            `http://localhost:3001/api/v1.1/users/getUser/${id}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+              withCredentials: true,
+            }
+          );
 
-        const secondResponse = await axios.get(
-          `http://localhost:3001/api/v1.1/users/getUserData/${firstResponse.data._id}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-            withCredentials: true,
-          }
-        );
+          const secondResponse = await axios.get(
+            `http://localhost:3001/api/v1.1/users/getUserData/${firstResponse.data._id}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+              withCredentials: true,
+            }
+          );
 
-        setUser(secondResponse.data.user);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+          setUser(secondResponse.data.user);
+        } catch (error) {
+          console.log(error);
+        }
+      };
 
-    fetchData();
-  }, [id]);
+      fetchData();
+    }
+  }, [id, history]);
 
   return (
     <>
