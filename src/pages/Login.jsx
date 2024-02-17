@@ -3,10 +3,8 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../features/cart/authSlice";
 import { useNavigate } from "react-router-dom";
-import Header from "../Components/Header";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import Footer from "../Components/Footer";
 
 function reducer(state, action) {
   console.log("Action", action);

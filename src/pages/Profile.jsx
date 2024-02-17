@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import Header from "../Components/Header";
-import Footer from "../Components/Footer";
 import SideBar from "../Components/Sidebar";
 
 const Profile = () => {

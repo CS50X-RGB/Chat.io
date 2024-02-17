@@ -1,5 +1,5 @@
-import React from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import JoinRoom from "./pages/joinRoom";
 import LeaveRoomAndSendMessage from "./pages/leaveandSendMess";
@@ -14,16 +14,26 @@ import { io } from "socket.io-client";
 import "./App.css";
 import Header from "./Components/Header";
 import Footer from "./Components/Footer";
+
 let socket = io.connect("http://localhost:3001");
 export const userServer = `http://localhost:3001/api/v1.1/users`;
 
 export default function App() {
   const { isAuth } = useSelector((state) => state.auth);
-  const isLeaveRoomPage = window.location.pathname.startsWith('/chat');
-  console.log(window.location.pathname.startsWith('/chat')); 
+  const location = useLocation();
+  const [footer, setFooter] = useState(false);
+
+  // useEffect(() => {
+  //   if (location.pathname.startsWith('/chat')) {
+  //     setFooter(true);
+  //   } else {
+  //     setFooter(false);
+  //   }
+  // }, [location.pathname]);
+
   return (
     <>
-    <Header/>
+      <Header />
       <Routes>
         <Route path="/" element={<Home />} />
         {isAuth ? (
@@ -36,7 +46,7 @@ export default function App() {
               element={<LeaveRoomAndSendMessage socket={socket} />}
             />
             <Route path="/myProfile" element={<Profile />} />
-            <Route path="/profile/:id" element={<ViewProfile/>} />
+            <Route path="/profile/:id" element={<ViewProfile />} />
           </>
         ) : (
           <>
@@ -51,7 +61,7 @@ export default function App() {
         <Route path="/*" element={<NotFound />} />
       </Routes>
       <Toaster />
-      {!isLeaveRoomPage && <Footer />}
+      {footer ? <></> : <Footer />}
     </>
   );
 }

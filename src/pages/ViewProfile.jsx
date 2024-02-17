@@ -52,11 +52,11 @@ function ViewProfile() {
         </div>
       ) : (
         <>
-          <div className="bg-blue-800 flex">
+          <div className="bg-blue-800 flex gap-[0rem] md:gap-[20rem]">
             <SideBar />
-            <div className=" p-5 flex flex-col justify-center pt-[10rem] items-center min-h-full">
+            <div className="p-5 flex flex-col justify-center pt-[10rem] items-center min-h-full">
               {user && (
-                <div className="bg-black min-w-[50vh] p-8 flex flex-col justify-center gap-7 items-center rounded-2xl shadow-2xl shadow-pink-600 space-y-4">
+                <div className="bg-black min-w-[50vh] p-8 flex flex-col justify-center gap-7 items-center rounded-2xl shadow-2xl border border-pink-600 shadow-pink-600 space-y-4">
                   {user.profileImage ? (
                     <img
                       src={user.profileImage}
@@ -64,14 +64,14 @@ function ViewProfile() {
                       alt="profilePic"
                     />
                   ) : (
-                    <div className="text-white border p-4 font-chakra border-black rounded-full bg-blue-400 text-4xl font-bold shadow-2xl shadow-pink-700 m-2">
+                    <div className="text-white border p-4 font-chakra border-black rounded-full bg-blue-400 text-4xl font-bold shadow-2xl shadow-pink-700 m-2 ">
                       {user.name
                         .split(" ")
                         .map((word) => word[0])
                         .join("")}
                     </div>
                   )}
-                  <h1 className="text-pink-800 text-4xl font-chakra font-semibold">
+                  <h1 className="text-pink-800 text-2xl md:text-4xl font-chakra font-semibold">
                     Name : {user.name}
                   </h1>
                   <h1 className="text-pink-700 font-chakra text-3xl ">

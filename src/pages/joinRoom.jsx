@@ -153,7 +153,7 @@ function JoinRoom({ socket }) {
                   placeholder="Enter Room No.."
                   onChange={(e) => setRoom(e.target.value)}
                   value={room}
-                  className="text-black text-lg md:text-xl fomt-bold p-3 rounded-l-lg bg-black focus:bg-blue-800 font-chakra"
+                  className="text-blue-500 focus:text-black text-lg md:text-xl font-bold p-3 rounded-l-lg bg-black focus:bg-blue-800 font-chakra"
                 />
                 <button className="bg-black text-blue-500 rounded-r-xl p-3 font-chakra">
                   Join Room

@@ -253,7 +253,15 @@ function LeaveRoomAndSendMessage({ socket }) {
             {messageReceived.map((obj, index) => (
               <div
                 key={index}
-                className="text-blue-300  bg-blue-500 rounded-xl m-3 p-3 text-4xl font-chakra shadow-xl shadow-pink-500"
+                className={`text-blue-300 shadow-xl w-[40vh] bg-blue-500 rounded-xl m-3 p-3 text-4xl font-chakra ${
+                  selectedColor === "red"
+                    ? "shadow-pink-500"
+                    : selectedColor === "black"
+                    ? "shadow-green-500"
+                    : selectedColor === "cyan"
+                    ? " shadow-cyan-500"
+                    : "shadow-black"
+                }`}
                 style={{
                   alignSelf:
                     obj.senderName === user.name ? "flex-end" : "flex-start",
@@ -268,14 +276,27 @@ function LeaveRoomAndSendMessage({ socket }) {
                       : selectedColor === "black"
                       ? "text-green-500"
                       : selectedColor === "cyan"
-                      ? "text-red-500"
+                      ? "text-black"
                       : "text-pink-500"
                   }  text-3xl font-bold`}
                 >
                   {obj.senderName}
                 </h1>
-
-                {obj.message}
+                <p
+                  className={`${
+                    selectedColor === "red"
+                      ? "text-white"
+                      : selectedColor === "black"
+                      ? "text-black"
+                      : selectedColor === "cyan"
+                      ? "text-black"
+                      : "text-pink-500"
+                  }
+                  font-bold
+                  text-3xl `}
+                >
+                  {obj.message}
+                </p>
               </div>
             ))}
           </div>
@@ -291,7 +312,7 @@ function LeaveRoomAndSendMessage({ socket }) {
           {isAuth && (
             <button
               onClick={sendMessage}
-              className={`${setTheme()} text-white rounded-r-xl px-3 font-chakra`}
+              className={`${setTheme()} text-white border border-black rounded-r-xl px-3 font-chakra`}
             >
               Send Message
             </button>

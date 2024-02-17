@@ -1,7 +1,5 @@
-import Header from "../Components/Header";
 import { useSelector } from "react-redux";
 import SideBar from "../Components/Sidebar";
-import Footer from "../Components/Footer";
 import image from "../assests/ChatAppHEro.webp";
 import { useEffect, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
