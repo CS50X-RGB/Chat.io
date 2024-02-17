@@ -28,42 +28,50 @@ export default function SideBar() {
         });
     }
   }, [isAuth]);
-
+  console.log(user)
   return (
     <>
-      <div className="bg-[#121636] w-1/12 h-screen p-2 rounded-2xl m-6 justify-around gap-4 hidden md:flex flex-col shadow-xl shadow-pink-500">
-        {profileImage && (
-          <img
-            src={profileImage}
-            className="flex flex-start w-full shadow-2xl shadow-pink-800 rounded-full"
-            alt="profilePic"
-          />
-        )}
-        <div className="text-blue-400 text-center flex flex-col justify-center">
-          {isAuth && user ? (
-            <h1 className="text-xl font-chakra mb-4">Hi! {user.name}</h1>
-          ) : null}
-          <Link
-            to={"/join"}
-            className="flex flex-col items-center cursor-pointer mb-4"
-          >
-            <img
-              src={sideBar}
-              alt="icon1"
-              className="fill-blue-500 h-10 w-10"
-            />
-            <p className="text-sm">Join Chat</p>
-          </Link>
-          <Link
-            to={"/myProfile"}
-            className="flex flex-col items-center cursor-pointer"
-          >
-            <img src={user1} alt="icon2" className="h-10 w-10" />
-            <p className="text-sm">My Profile</p>
-          </Link>
+      {!profileImage || !user ? (
+        <></>
+      ) : (
+        <div className="bg-black w-1/12 h-screen p-2 rounded-2xl m-6 justify-around gap-4 hidden md:flex flex-col shadow-xl shadow-pink-500">
+          {profileImage && (
+            <div className="shadow-2xl shadow-pink-800 rounded-full border border-blue-400 relative">
+              <img
+                src={profileImage}
+                className="w-full h-full object-cover rounded-full"
+                alt="profilePic"
+              />
+            </div>
+          )}
+          <div className="text-blue-400 text-center flex flex-col justify-center">
+            {isAuth && user ? (
+              <h1 className="text-2xl font-semibold font-chakra mb-4">
+                Hi! {user.name}
+              </h1>
+            ) : null}
+            <Link
+              to={"/join"}
+              className="flex flex-col items-center cursor-pointer mb-4"
+            >
+              <img
+                src={sideBar}
+                alt="icon1"
+                className="fill-blue-500 h-10 w-10"
+              />
+              <p className="text-xl font-ostwald">Join Chat</p>
+            </Link>
+            <Link
+              to={"/myProfile"}
+              className="flex flex-col items-center cursor-pointer"
+            >
+              <img src={user1} alt="icon2" className="h-10 w-10" />
+              <p className="text-xl font-ostwald">My Profile</p>
+            </Link>
+          </div>
         </div>
-      </div>
-      <div className="flex bg-blue-500 z-10 rounded-t-3xl shadow-xl shadow-black p-[1rem] flex-row justify-around md:hidden fixed  bottom-0">
+      )}
+      <div className="flex bg-black z-10 rounded-t-3xl shadow-xl shadow-black p-[1rem] flex-row justify-around md:hidden fixed  bottom-0">
         {profileImage && (
           <img
             src={profileImage}
@@ -81,14 +89,14 @@ export default function SideBar() {
               alt="icon1"
               className="fill-blue-500 h-10 w-10"
             />
-            <p className="text-sm">Join Chat</p>
+            <p className="text-xl font-ostwald">Join Chat</p>
           </Link>
           <Link
             to={"/myProfile"}
             className="flex flex-col items-center cursor-pointer"
           >
             <img src={user1} alt="icon2" className="h-10 w-10" />
-            <p className="text-sm">My Profile</p>
+            <p className="text-xl font-ostwald">My Profile</p>
           </Link>
         </div>
       </div>

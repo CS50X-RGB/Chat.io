@@ -1,14 +1,10 @@
 import React, { useState, useEffect, useReducer } from "react";
-import io from "socket.io-client";
 import "../index.css";
-import Header from "../Components/Header";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import Footer from "../Components/Footer";
 import Sidebar from "../Components/Sidebar";
-// const socket = io.connect("http://localhost:3001");
 
 const colorReducer = (state, action) => {
   switch (action.type) {
@@ -103,64 +99,63 @@ function JoinRoom({ socket }) {
   console.log("Color is ",selectedColor);
   return (
     <>
-      <Header />
-      <div className="bg-gradient-to-br from-blue-800  to-pink-600/40">
-        <div className="flex border-4 border-black flex-row justify-around py-[8rem]">
+      <div className="bg-gradient-to-tr from-blue-600 to-fuchsia-500">
+        <div className="flex border-4 border-black flex-row justify-around py-[8rem] w-[100%]">
           <Sidebar />
-          <div className="flex flex-col text-blue-800 flex-1 justify-center gap-2 items-center">
+          <div className="flex flex-col text-black flex-1 justify-center gap-2 items-center">
             <div className="space-y-3">
-              <h1 className="text-4xl font-ostwald">Set up color theme</h1>
+              <h1 className="text-4xl md:text-6xl font-ostwald">Set up color theme</h1>
               <p className="text-xl flex flex-row gap-3 p-4 font-ostwald">
                 Room Background Color:{" "}
                 {selectedColor === "black" ? (
-                  <div className="bg-black h-10 w-10 rounded-full border-2 border-white" />
+                <div className="bg-black h-10 w-10 rounded-full shadow-xl shadow-black" />
                 ) : null}
                 {selectedColor === "pink" ? (
-                  <div className="bg-pink-400 h-10 w-10 rounded-full border-2 border-white" />
+                  <div className="bg-pink-400 h-10 w-10 rounded-full shadow-xl shadow-pink-400" />
                 ) : null}
                 {selectedColor === "blue" ? (
-                  <div className="bg-blue-800 h-10 w-10 rounded-full border-2 border-white" />
+                  <div className="bg-blue-800 h-10 w-10 rounded-full shadow-xl shadow-blue-800" />
                 ) : null}
                 {selectedColor === "cyan" ? (
-                  <div className="bg-cyan-500 h-10 w-10 rounded-full border-2 border-white" />
+                  <div className="bg-cyan-500 h-10 w-10 rounded-full shadow-xl shadow-cyan-500" />
                 ) : null}
                 {selectedColor === "red" ? (
-                  <div className="bg-red-500 h-10 w-10 rounded-full border-2 border-white" />
+                  <div className="bg-red-500 h-10 w-10 rounded-full shadow-xl shadow-red-500" />
                 ) : null}
               </p>
-              <div className="flex cursor-pointer justify-between">
+              <div className="flex cursor-pointer p-3 gap-2 justify-between">
                 <div
                   onClick={() => handleColorSelection("black")}
-                  className="bg-black h-10 w-10 rounded-full border-2 border-white"
+                  className="bg-black h-10 w-10 rounded-full shadow-xl shadow-black"
                 />
                 <div
                   onClick={() => handleColorSelection("pink")}
-                  className="bg-pink-400 h-10 w-10 rounded-full border-2 border-white"
+                  className="bg-pink-400 h-10 w-10 rounded-full shadow-xl shadow-pink-400"
                 />
                 <div
                   onClick={() => handleColorSelection("blue")}
-                  className="bg-blue-800 h-10 w-10 rounded-full border-2 border-white"
+                  className="bg-blue-800 h-10 w-10 rounded-full shadow-xl shadow-blue-800"
                 />
                 <div
                   onClick={() => handleColorSelection("cyan")}
-                  className="bg-cyan-500 h-10 w-10 rounded-full border-2 border-white"
+                  className="bg-cyan-500 h-10 w-10 rounded-full shadow-xl shadow-cyan-500"
                 />
                 <div
                   onClick={() => handleColorSelection("red")}
-                  className="bg-red-500 h-10 w-10 rounded-full border-2 border-white"
+                  className="bg-red-500 h-10 w-10 rounded-full shadow-xl shadow-red-500"
                 />
               </div>
             </div>
             <div>
-              <form onSubmit={joinRoom}>
+              <form onSubmit={joinRoom} className="max-w-full flex justify-center">
                 <input
                   type="text"
                   placeholder="Enter Room No.."
                   onChange={(e) => setRoom(e.target.value)}
                   value={room}
-                  className="text-blue-700 p-3 rounded-l-lg focus:bg-blue-300 font-chakra"
+                  className="text-black text-lg md:text-xl fomt-bold p-3 rounded-l-lg bg-black focus:bg-blue-800 font-chakra"
                 />
-                <button className="bg-[#1d54c9] text-white rounded-r-xl p-3 font-chakra">
+                <button className="bg-black text-blue-500 rounded-r-xl p-3 font-chakra">
                   Join Room
                 </button>
               </form>
@@ -168,7 +163,6 @@ function JoinRoom({ socket }) {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 }

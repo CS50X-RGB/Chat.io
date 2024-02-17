@@ -67,8 +67,8 @@ export default function Header() {
   };
 
   return (
-    <div className="fixed top-0 left-0 w-full z-20 shadow-lg shadow-pink-300">
-      <div className="max-w-full flex justify-between p-6 bg-[#121636]">
+    <div className="min-w-[100%] fixed top-0 left-0 z-20">
+      <div className="flex gap-8 justify-around py-6 bg-black shadow-lg rounded-b-3xl shadow-blue-800">
         <Link to={"/"} className="flex flex-col">
           <h1 className="flex px-1 flex-row gap-3 text-blue-500 text-3xl md:text-4xl font-chakra text-center">
             <img src={logo} className="w-10 h-10" alt="logo" />
@@ -77,6 +77,7 @@ export default function Header() {
           <p className="text-sm text-start text-blue-500">Let's Chat</p>
         </Link>
         <div className="hidden md:flex gap-4">
+          
           {isAuth ? (
             <>
               <h1 className="text-pink-500 text-xl font-semibold  font-chakra p-3">
@@ -91,16 +92,16 @@ export default function Header() {
               )}
               <Link
                 to="/myProfile"
-                className="text-blue-500  bg-white font-chakra rounded-lg px-4 py-3 flex justify-around gap-4 items-center hover:bg-blue-500 hover:text-white"
+                className="flex items-center justify-around gap-[1rem] font-bold bg-black px-6 py-3 rounded-lg text-blue-500 font-chakra hover:bg-blue-500 hover:text-black text-xl border border-dotted border-pink-300 "
               >
                 My Profile
-                <ImProfile size={34}/>
+                <ImProfile size={34} />
               </Link>
             </>
           ) : (
             <Link
               to="/register"
-              className="text-blue-500 bg-white font-chakra rounded-lg px-4 py-3 flex justify-center items-center hover:bg-blue-500 hover:text-white"
+              className="flex items-center justify-center font-bold bg-black px-6 py-3 rounded-lg text-blue-500 font-chakra hover:bg-blue-500 hover:text-black text-xl border border-dotted border-pink-300"
             >
               Register
             </Link>
@@ -108,9 +109,8 @@ export default function Header() {
           {isAuth ? (
             <>
               <span
-                className="text-blue-500 bg-white rounded-l-xl rounded-r-xl font-chakra px-4 py-3 flex justify-center items-center hover:bg-blue-500 hover:text-white"
+                className="flex items-center justify-around gap-[1rem] font-bold bg-black px-6 py-3 rounded-lg text-blue-500 font-chakra hover:bg-blue-500 hover:text-black text-xl border border-dotted border-pink-300 "
                 onClick={handleLogout}
-                style={{ cursor: "pointer" }}
               >
                 Logout
               </span>
@@ -118,7 +118,7 @@ export default function Header() {
           ) : (
             <Link
               to="/login"
-              className="text-blue-500 rounded-r-full rounded-l-full bg-white font-chakra rounded-lg px-4 py-3 flex justify-center items-center hover:bg-blue-500 hover:text-white"
+              className="flex items-center justify-center font-bold bg-black px-6 py-3 rounded-lg text-blue-500 font-chakra hover:bg-blue-500 hover:text-black text-xl"
             >
               Login
             </Link>
@@ -140,16 +140,16 @@ export default function Header() {
                   src={image}
                   alt="profileImage"
                 />
-                <h1 className="text-white font-chakra p-3">
+                <h1 className="text-blue-600  text-3xl font-chakra p-3">
                   Welcome!! {userName.toString().toUpperCase()}
                 </h1>
               </div>
             )}
-            {isAuth ? (
 
+            {isAuth ? (
               <Link
                 to="/myProfile"
-                className="text-white border-t-2 rounded-r-full rounded-l-full border-b-2 p-3 border-pink-800 hover:text-blue-500"
+                className="flex items-center justify-center font-bold bg-black px-6 py-3 rounded-lg text-blue-500 font-chakra hover:bg-blue-500 hover:text-black text-xl border border-dotted border-pink-300"
                 onClick={() => setOpen(false)}
               >
                 My Profile
@@ -157,7 +157,7 @@ export default function Header() {
             ) : (
               <Link
                 to="/register"
-                className="text-white border-t-2 border-b-2 rounded-r-full rounded-l-full p-3 border-pink-800 hover:text-blue-500"
+                className="flex items-center justify-center font-bold bg-black px-6 py-3 rounded-lg text-blue-500 font-chakra hover:bg-blue-500 hover:text-black text-xl border border-dotted border-pink-300"
                 onClick={() => setOpen(false)}
               >
                 Register
@@ -165,7 +165,7 @@ export default function Header() {
             )}
             {isAuth ? (
               <span
-                className="text-white border-t-2 border-b-2 p-3 border-pink-800 hover:text-blue-500"
+                className="flex items-center justify-center font-bold bg-black px-6 py-3 rounded-lg text-blue-500 font-chakra hover:bg-blue-500 hover:text-black text-xl border border-dotted border-pink-300"
                 onClick={() => {
                   handleLogout();
                   setOpen(false);
@@ -176,7 +176,7 @@ export default function Header() {
             ) : (
               <Link
                 to="/login"
-                className="text-white hover:text-blue-500"
+                className="flex items-center justify-center font-bold bg-black px-6 py-3 rounded-lg text-blue-500 font-chakra hover:bg-blue-500 hover:text-black text-xl border border-dotted border-pink-300"
                 onClick={() => setOpen(false)}
               >
                 Login

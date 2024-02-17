@@ -3,9 +3,9 @@ import Header from "../Components/Header";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import Footer from "../Components/Footer";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../features/cart/authSlice";
+import { IoMdAdd } from "react-icons/io";
 
 export default function Register() {
   const dispatch = useDispatch();
@@ -53,9 +53,13 @@ export default function Register() {
           </div>
         ));
       }
-      dispatch(login());
-      console.log(isAuth);
-      navigate("/");
+      if(response.data.success){
+        console.log(response.data.success);
+        dispatch(login());
+        console.log(isAuth);
+        navigate("/");
+      }
+      
     } catch (error) {
       toast.custom((t) => (
         <div className="border-2 border-white bg-gradient-to-tr from-red-400 to-red-700 text-white font-chakra p-3 rounded-md">
@@ -86,76 +90,89 @@ export default function Register() {
     <>
       <Header />
       <div className="bg-[#121636] h-screen flex flex-col items-center justify-center shadow-xl shadow-black rounded-b-xl">
-        {name !== "" ? (
-          <h1 className="text-center font-chakra text-4xl text-blue-500 p-5">
-            Hi {name} let's Get Started
-          </h1>
-        ) : (
-          ""
-        )}
         <div className="flex p-4 flex-col md:flex-row gap-8 justify-center rounded-xl">
-          <div className="hidden md:flex text-white font-chakra text-2xl text-center rounded-l-2xl p-5 flex-row md:flex-col justify-center items-center bg-gradient-to-bl from-blue-300 via-pink-400 to-blue-500">
-            Register here to get the seamless Chatting experience
-            <p>Create rooms and talk with your friends endlessly</p>
+          <div className="hidden md:flex text-white text-center rounded-l-2xl p-5 flex-row md:flex-col justify-center items-center bg-gradient-to-bl from-blue-300 via-pink-400 to-blue-500 h-[90vh]">
+            {name !== "" ? (
+              <h1 className="text-center font-ostwald text-4xl text-white font-extrabold pt-[3rem]">
+                Hi {name} get the seamless Chatting experience
+                <p>Create rooms and talk with your friends endlessly</p>
+              </h1>
+            ) : (
+              <h5 className="text-2xl font-bold font-ostwald tracking-wider">
+                Register here to get the seamless Chatting experience
+                <p>Create rooms and talk with your friends endlessly</p>
+              </h5>
+            )}
           </div>
           <form
-            className="justify-center flex flex-col gap-3 py-5 items-center shadow-xl shadow-blue-300 p-4 text-xl rounded-r-2xl"
+            className="justify-center bg-black flex flex-col gap-3 py-5 items-center shadow-xl shadow-blue-300 p-4 text-xl rounded-r-2xl w-[50vh]"
             onSubmit={handleRegister}
           >
-            <div className="rounded-full flex items-center p-4 justify-center border border-pink-300 drop-shadow-xl">
-              {image ? (
-                <img
-                  src={image}
-                  alt="ProfileImage"
-                  className="rounded-full h-full w-full"
-                />
-              ) : (
-                <label htmlFor="profile-pic-input" className="cursor-pointer">
-                  <span className="text-gray-400">
-                    Put your Profile Pic here
-                  </span>
-                  <input
-                    id="profile-pic-input"
-                    type="file"
-                    accept="image/*"
-                    onChange={convertToBase64}
-                    className="sr-only"
+            <h1 className="text-3xl font-ostwald text-blue-700 p-8 tracking-wider">
+              REGISTER
+            </h1>
+            <div
+              className={`rounded-full ${
+                !image ? "p-[7rem]" : "p-[.5rem]"
+              } relative border-2 border-text`}
+            >
+              <input
+                type="file"
+                id="fileInput"
+                accept="image/*"
+                className="hidden"
+                onChange={convertToBase64}
+              />
+              <label htmlFor="fileInput" className="cursor-pointer">
+                {image ? (
+                  <>
+                    <img
+                      src={image}
+                      alt="ProfileImage"
+                      className="rounded-full w-[10rem] h-[10rem] object-cover"
+                    />
+                    <IoMdAdd
+                      size={50}
+                      className="fill-blue-500 z-30 absolute -right-[1rem] bottom-[0.1rem]"
+                    />
+                  </>
+                ) : (
+                  <IoMdAdd
+                    size={50}
+                    className="fill-blue-500 z-30 absolute -right-[.8rem] bottom-[2rem]"
                   />
-                </label>
-              )}
+                )}
+              </label>
             </div>
             <input
               type="text"
               value={name}
               onChange={handleNameChange}
               placeholder="Your Name"
-              className="p-3 border-2 rounded-md text-blue-400 font-bold font-chakra focus:text-white border-blue-400 bg-white focus:bg-blue-600"
+              className="p-3 border-2 rounded-2xl text-blue-400 font-bold font-chakra focus:text-white border-blue-400 bg-black focus:bg-blue-600 w-full"
             />
             <input
               type="email"
               value={email}
               onChange={handleEmailChange}
               placeholder="Your Email"
-              className="p-3 border-2 rounded-md  text-blue-400 font-bold font-chakra focus:text-white border-blue-400 bg-white focus:bg-blue-600"
+              className="p-3 border-2 rounded-2xl text-blue-400 font-bold font-chakra focus:text-white border-blue-400 bg-black focus:bg-blue-600 w-full"
             />
             <input
               type="password"
               value={password}
               onChange={handlePasswordChange}
               placeholder="Your Password"
-              className="p-3 border-2 rounded-md text-blue-400 font-bold font-chakra focus:text-white border-blue-400 bg-white focus:bg-blue-600"
+              className="p-3 border-2 rounded-2xl text-blue-400 font-bold font-chakra focus:text-white border-blue-400 bg-black focus:bg-blue-600 w-full"
             />
-            <div className="flex flex-col gap-4  justify-center items-center">
-              <button
-                type="submit"
-                className="text-blue-400 bg-white hover:bg-blue-400 hover:text-white rounded-lg px-5 text-xl font-chakra p-5 py-2"
-              >
+            <div className="flex  flex-col text-xl w-[60%] gap-2 justify-center">
+              <button className="flex items-center justify-center font-bold bg-black px-6 py-3 rounded-2xl text-blue-500 font-ostwald hover:bg-blue-500 hover:text-black text-xl border border-dotted border-pink-300">
                 Register
               </button>
-              <p className="text-white font-chakra text-lg">OR</p>
+              <p className="text-white font-chakra justify-center flex">OR</p>
               <Link
                 to="/login"
-                className="text-blue-400 rounded-lg px-5 py-2 font-chakra text-xl p-4 bg-white hover:bg-blue-400 hover:text-white"
+                className="flex items-center justify-center font-bold bg-black px-6 py-3 rounded-2xl text-blue-500 font-ostwald hover:bg-blue-500 hover:text-black text-xl border border-dotted border-pink-300"
               >
                 Login
               </Link>
@@ -163,7 +180,6 @@ export default function Register() {
           </form>
         </div>
       </div>
-      <Footer />
     </>
   );
 }

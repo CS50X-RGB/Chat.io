@@ -1,5 +1,3 @@
-import Footer from "../Components/Footer";
-import Header from "../Components/Header";
 import pic1 from "../assests/404.svg";
 import { Link } from "react-router-dom";
 
@@ -7,8 +5,7 @@ export default function NotFound() {
   return (
     <>
       <div className="bg-[#121636]">
-        <Header />
-        <div className="flex flex-col justify-center shadow-xl shadow-black md:flex-row">
+        <div className="flex py-[8rem] flex-col justify-center shadow-xl shadow-black md:flex-row">
           <img src={pic1} className="w-1/4 h-3/4 justify-center items-center flex" alt="img" />
           <div className="flex flex-col justify-center gap-2 text-center text-white">
             <h1 className="text-5xl font-ostwald">404</h1>
@@ -18,7 +15,6 @@ export default function NotFound() {
           </div>
         </div>
       </div>
-      <Footer/>
     </>
   );
 }

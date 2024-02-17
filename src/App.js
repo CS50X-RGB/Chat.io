@@ -12,13 +12,18 @@ import ViewProfile from "./pages/ViewProfile";
 import { Toaster } from "react-hot-toast";
 import { io } from "socket.io-client";
 import "./App.css";
+import Header from "./Components/Header";
+import Footer from "./Components/Footer";
 let socket = io.connect("http://localhost:3001");
 export const userServer = `http://localhost:3001/api/v1.1/users`;
 
 export default function App() {
   const { isAuth } = useSelector((state) => state.auth);
+  const isLeaveRoomPage = window.location.pathname.startsWith('/chat');
+  console.log(window.location.pathname.startsWith('/chat')); 
   return (
     <>
+    <Header/>
       <Routes>
         <Route path="/" element={<Home />} />
         {isAuth ? (
@@ -46,6 +51,7 @@ export default function App() {
         <Route path="/*" element={<NotFound />} />
       </Routes>
       <Toaster />
+      {!isLeaveRoomPage && <Footer />}
     </>
   );
 }

@@ -40,7 +40,6 @@ export default function Home() {
 
   return (
     <>
-      <Header />
       <div className="flex flex-col pt-[5rem] gap-4">
         <div className="flex flex-row justify-around p-8 bg-gradient-to-bl from-blue-300 via-pink-400 to-blue-500">
         {isAuth ? <SideBar /> : null}
@@ -61,7 +60,6 @@ export default function Home() {
           />
         </div>
       </div>
-      <Footer />
     </>
   );
 }

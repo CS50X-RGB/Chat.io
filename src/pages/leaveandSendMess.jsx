@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import Header from "../Components/Header";
 import toast from "react-hot-toast";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -15,7 +14,6 @@ function LeaveRoomAndSendMessage({ socket }) {
   const { room: roomno, id } = useParams();
   const [user, setUser] = useState("");
   const navigate = useNavigate();
-  const [isMounted, setIsMounted] = useState(false);
   const [buttonClicked, setButtonClicked] = useState(false);
 
   const getMessages = async () => {
@@ -100,14 +98,6 @@ function LeaveRoomAndSendMessage({ socket }) {
   }, []);
 
   useEffect(() => {
-    setIsMounted(true);
-
-    return () => {
-      setIsMounted(false);
-    };
-  }, []);
-
-  useEffect(() => {
     setRoom(roomno);
     if (roomno !== "") {
       socket.emit("join_room", roomno);
@@ -149,9 +139,9 @@ function LeaveRoomAndSendMessage({ socket }) {
     }
 
     try {
-      const lastMessage = messageReceived[messageReceived.length - 1];
-
-      if (isMounted) {
+      if (messageReceived.length > 0) {
+        const lastMessage = messageReceived[messageReceived.length - 1];
+        console.log("Check2");
         const response = await axios.post(
           `http://localhost:3001/api/v1.1/chat/chat/${id}/${roomno}`,
           {
@@ -168,7 +158,7 @@ function LeaveRoomAndSendMessage({ socket }) {
             withCredentials: true,
           }
         );
-
+        console.log(response);
         if (response && response.data) {
           toast.custom((t) => (
             <div className="border-2 border-black bg-gradient-to-tr from-green-500 via-green-600 to-green-700 text-black font-chakra p-3 rounded-md">
@@ -180,14 +170,16 @@ function LeaveRoomAndSendMessage({ socket }) {
     } catch (error) {
       console.error("Error adding user to the database:", error);
     }
-    // if(buttonClicked){
-      console.log("Button clicked Message sent to the database");
-    //   fetchUserDataForMessages();
-    // }
-    fetchUserDataForMessages();
+
     setButtonClicked(false);
   };
-  console.log(buttonClicked);
+
+  useEffect(() => {
+    if (buttonClicked) {
+      fetchUserDataForMessages();
+    }
+  }, [buttonClicked]);
+
   const isAuth = JSON.parse(localStorage.getItem("auth")) || false;
 
   const getMessageColor = (a, b) => {
@@ -237,8 +229,6 @@ function LeaveRoomAndSendMessage({ socket }) {
 
   return (
     <>
-      <Header />
-
       <div className={`min-h-screen ${setTheme()}`}>
         <div className="pt-[10rem] px-4">
           <div className="fixed p-3 flex flex-row justify-between">
@@ -257,7 +247,7 @@ function LeaveRoomAndSendMessage({ socket }) {
             </button>
           </div>
           <div
-            className="p-4"
+            className="p-4 "
             style={{ display: "flex", flexDirection: "column" }}
           >
             {messageReceived.map((obj, index) => (

@@ -62,9 +62,11 @@ export function Login() {
             <strong>Success: </strong> {response.data.message}
           </div>
         ));
-        dispatch(login());
-        console.log(isAuth);
-        navigate("/myProfile");
+        if(response.data.success){
+          dispatch(login());
+          console.log(isAuth);
+          navigate("/");
+        }
       }
     } catch (error) {
       console.error("Error during login:", error);
@@ -78,42 +80,43 @@ export function Login() {
 
   return (
     <>
-    <Header/>
+
       <div className="bg-[#121636] pt-[10rem] p-[1rem] md:p-[3rem] shadow-xl shadow-black rounded-b-xl">
         <h1 className="flex justify-center items-center text-4xl p-5 font-chakra text-blue-400">Login</h1>
         <div className="flex p-2 md:p-7 flex-row gap-8 justify-center">
-          <div className="hidden p-10 text-2xl font-chakra rounded-l-xl text-white md:flex items-center justify-center bg-gradient-to-tr from-blue-500 via-teal-400 to-black">
-            <h1 className="flex flex-col justify-center">
-              Hi lets login and start your chatting journey
+          <div className="hidden p-10  rounded-l-xl text-white md:flex items-center justify-center bg-gradient-to-tr from-blue-500 via-teal-400 to-black">
+            <h1 className="flex flex-col font-ostwald text-4xl justify-center">
+              Hi lets login and re-start your chatting journey
               <p className="flex justify-center">Your chatting solution</p>
             </h1>
           </div>
           <form
-            className="justify-center w-[80%] flex flex-col gap-3 py-5 items-center shadow-xl text-2xl rounded-r-xl shadow-blue-400 p-2 md:p-4"
+            className="justify-center bg-black w-[50vh] flex flex-col gap-6 p-[1rem] items-center shadow-xl text-2xl rounded-r-xl shadow-blue-400 md:p-4 rounded-2xl"
             onSubmit={handleLogin}
           >
+            <h1 className="text-blue-500 font-ostwald font-bold text-5xl tracking-wider py-[1rem]">LOGIN</h1>
             <input
               type="email"
               placeholder="Your Email"
               value={state.email}
               onChange={handleEmailChange}
-              className="w-full p-3 border-2 rounded-md border-blue-400"
+              className="p-3 border-2 rounded-2xl text-blue-400 font-bold font-chakra focus:text-white border-blue-400 bg-black focus:bg-blue-600 w-full"
             />
             <input
               type="password"
               placeholder="Your Password"
               value={state.password}
               onChange={handlePasswordChange}
-              className="w-full p-3 border-2 rounded-md border-blue-400"
+              className="p-3 border-2 rounded-2xl text-blue-400 font-bold font-chakra focus:text-white border-blue-400 bg-black focus:bg-blue-600 w-full"
             />
-            <div className="flex  flex-col text-xl gap-2 justify-center">
-              <button className="text-blue-400 p-3 bg-white hover:bg-blue-400 hover:text-white rounded-lg px-5 py-2">
+            <div className="flex  flex-col text-xl w-[60%] gap-2 justify-center">
+              <button className="flex items-center justify-center font-bold bg-black px-6 py-3 rounded-2xl text-blue-500 font-ostwald hover:bg-blue-500 hover:text-black text-xl border border-dotted border-pink-300">
                 Login
               </button>
               <p className="text-white font-chakra justify-center flex">OR</p>
               <Link
                 to="/register"
-                className="text-blue-400 rounded-lg px-5 py-2 bg-white hover:bg-blue-400 hover:text-white"
+                className="flex items-center justify-center font-bold bg-black px-6 py-3 rounded-2xl text-blue-500 font-ostwald hover:bg-blue-500 hover:text-black text-xl border border-dotted border-pink-300"
               >
                 Register
               </Link>
@@ -121,7 +124,6 @@ export function Login() {
           </form>
         </div>
       </div>
-      <Footer />
     </>
   );
 }
