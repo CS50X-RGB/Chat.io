@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { Navigate, Route, Routes} from "react-router-dom";
 import { useSelector } from "react-redux";
 import JoinRoom from "./pages/joinRoom";
 import LeaveRoomAndSendMessage from "./pages/leaveandSendMess";
@@ -20,17 +19,6 @@ export const userServer = `http://localhost:3001/api/v1.1/users`;
 
 export default function App() {
   const { isAuth } = useSelector((state) => state.auth);
-  const location = useLocation();
-  const [footer, setFooter] = useState(false);
-
-  // useEffect(() => {
-  //   if (location.pathname.startsWith('/chat')) {
-  //     setFooter(true);
-  //   } else {
-  //     setFooter(false);
-  //   }
-  // }, [location.pathname]);
-
   return (
     <>
       <Header />
@@ -61,7 +49,7 @@ export default function App() {
         <Route path="/*" element={<NotFound />} />
       </Routes>
       <Toaster />
-      {footer ? <></> : <Footer />}
+      <Footer />
     </>
   );
 }

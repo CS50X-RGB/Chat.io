@@ -28,7 +28,6 @@ export default function SideBar() {
         });
     }
   }, [isAuth]);
-  console.log(user)
   return (
     <>
       {!profileImage || !user ? (
@@ -71,35 +70,39 @@ export default function SideBar() {
           </div>
         </div>
       )}
-      <div className="flex bg-black z-10 rounded-t-3xl shadow-xl shadow-black p-[1rem] flex-row justify-around md:hidden fixed  bottom-0">
-        {profileImage && (
-          <img
-            src={profileImage}
-            className="flex flex-start w-[20%] p-1 shadow-2xl shadow-pink-800 rounded-full"
-            alt="profilePic"
-          />
-        )}
-        <div className="text-pink-700 p-1 text-center text-2xl font-semibold font-ostwald flex gap-5 flex-1 flex-row justify-center items-center">
-          <Link
-            to={"/join"}
-            className="flex flex-col items-center cursor-pointer"
-          >
+      {!profileImage || !user ? (
+        <></>
+      ) : (
+        <div className="flex bg-black z-10 rounded-t-3xl shadow-xl shadow-black p-[1rem] flex-row justify-around md:hidden fixed  bottom-0">
+          {profileImage && (
             <img
-              src={sideBar}
-              alt="icon1"
-              className="fill-blue-500 h-10 w-10"
+              src={profileImage}
+              className="flex flex-start w-[20%] p-1 shadow-2xl shadow-pink-800 rounded-full"
+              alt="profilePic"
             />
-            <p className="text-xl font-ostwald">Join Chat</p>
-          </Link>
-          <Link
-            to={"/myProfile"}
-            className="flex flex-col items-center cursor-pointer"
-          >
-            <img src={user1} alt="icon2" className="h-10 w-10" />
-            <p className="text-xl font-ostwald">My Profile</p>
-          </Link>
+          )}
+          <div className="text-pink-700 p-1 text-center text-2xl font-semibold font-ostwald flex gap-5 flex-1 flex-row justify-center items-center">
+            <Link
+              to={"/join"}
+              className="flex flex-col items-center cursor-pointer"
+            >
+              <img
+                src={sideBar}
+                alt="icon1"
+                className="fill-blue-500 h-10 w-10"
+              />
+              <p className="text-xl font-ostwald">Join Chat</p>
+            </Link>
+            <Link
+              to={"/myProfile"}
+              className="flex flex-col items-center cursor-pointer"
+            >
+              <img src={user1} alt="icon2" className="h-10 w-10" />
+              <p className="text-xl font-ostwald">My Profile</p>
+            </Link>
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 }

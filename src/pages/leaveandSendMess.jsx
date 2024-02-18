@@ -27,7 +27,9 @@ function LeaveRoomAndSendMessage({ socket }) {
           withCredentials: true,
         }
       );
-
+      // for (let i = 0; i < response.data.content.length; i++) {
+      //   console.log(response.data.content[i]);
+      // }
       const filteredMessages = response.data.content.filter(
         (msg) => !(msg.senderName === user.name && msg.message === message)
       );
@@ -70,7 +72,13 @@ function LeaveRoomAndSendMessage({ socket }) {
   const sendMessage = () => {
     setButtonClicked(true);
     if (message !== "" && room !== "") {
-      socket.emit("send_message", { message, room, sender: user.name });
+      console.log(`Message is sent by ${user.name} && message is ${message}`);
+      socket.emit("send_message", {
+        message,
+        room,
+        sender: user.name,
+        _id: user.id,
+      });
       setMessage("");
     }
   };
@@ -87,7 +95,6 @@ function LeaveRoomAndSendMessage({ socket }) {
             withCredentials: true,
           }
         );
-
         setUser(response.data.user);
       } catch (error) {
         console.error("Error fetching user profile:", error);
@@ -111,74 +118,85 @@ function LeaveRoomAndSendMessage({ socket }) {
 
   useEffect(() => {
     const handleReceivedMessage = (data) => {
-      setMessageReceived((prevMessages) => [...prevMessages, { ...data }]);
+      console.log(data);
+      console.log("I am updating messageReceivedArray before", messageReceived);
+      console.log({
+        senderName: data.senderName,
+        message: data.message,
+        _id: user._id,
+      });
+      setMessageReceived((prevMessages) => [
+        ...prevMessages,
+        {
+          senderName: data.senderName,
+          message: data.message,
+          _id: user._id,
+        },
+      ]);
     };
-
     socket.on("r-m", handleReceivedMessage);
-
+    console.log("I am updating messageReceivedArray after", messageReceived);
     return () => {
       socket.off("r-m", handleReceivedMessage);
     };
-  }, [socket]);
-
-  const fetchUserDataForMessages = async () => {
-    console.log("Data sent");
-    const userDataSet = new Set();
-
-    for (const obj of messageReceived) {
-      if (obj.senderName !== user.name) {
-        const userData = await getUserData(obj.senderName);
-        if (userData && userData._id) {
-          userDataSet.add(userData._id);
-        }
-      }
-    }
-
-    if (userDataSet.size === 0) {
-      console.log("No receivers are there");
-    }
-
-    try {
-      if (messageReceived.length > 0) {
-        const lastMessage = messageReceived[messageReceived.length - 1];
-        console.log("Check2");
-        const response = await axios.post(
-          `http://localhost:3001/api/v1.1/chat/chat/${id}/${roomno}`,
-          {
-            content: {
-              senderName: lastMessage.senderName,
-              message: lastMessage.message,
-            },
-            receivers: Array.from(userDataSet),
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-            withCredentials: true,
-          }
-        );
-        console.log(response);
-        if (response && response.data) {
-          toast.custom((t) => (
-            <div className="border-2 border-black bg-gradient-to-tr from-green-500 via-green-600 to-green-700 text-black font-chakra p-3 rounded-md">
-              <strong>Success: </strong> {response.data.message}
-            </div>
-          ));
-        }
-      }
-    } catch (error) {
-      console.error("Error adding user to the database:", error);
-    }
-
-    setButtonClicked(false);
-  };
+  }, [socket, messageReceived, user._id]);
 
   useEffect(() => {
     if (buttonClicked) {
+      console.log(buttonClicked);
+      const fetchUserDataForMessages = async () => {
+        console.log("Data sent");
+        console.log(messageReceived[messageReceived.length - 1]);
+        const newArray = messageReceived.filter(
+          (msg) => msg.senderName !== user.name
+        );
+        const userDataSet = new Set(newArray.map((msg) => msg._id));
+        if (userDataSet.size === 0) {
+          console.log("No receivers are there");
+        }
+
+        try {
+          if (messageReceived.length > 0) {
+            console.log(messageReceived[messageReceived.length - 1]);
+
+            const lastMessage = messageReceived[messageReceived.length - 1];
+            console.log(Date.now());
+            const response = await axios.post(
+              `http://localhost:3001/api/v1.1/chat/chat/${id}/${roomno}`,
+              {
+                content: {
+                  senderName: lastMessage.senderName,
+                  message: lastMessage.message,
+                },
+                receivers: Array.from(userDataSet),
+              },
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                withCredentials: true,
+              }
+            );
+            console.log(response);
+            console.log(Date.now());
+            if (response && response.data) {
+              toast.custom((t) => (
+                <div className="border-2 border-black bg-gradient-to-tr from-green-500 via-green-600 to-green-700 text-black font-chakra p-3 rounded-md">
+                  <strong>Success: </strong> {response.data.message}
+                </div>
+              ));
+            }
+            setButtonClicked(false);
+            console.log(`HERE ${buttonClicked}`);
+          }
+        } catch (error) {
+          console.error("Error adding user to the database:", error);
+        }
+      };
+      console.log(`HERE ${buttonClicked}`);
       fetchUserDataForMessages();
     }
-  }, [buttonClicked]);
+  }, [buttonClicked, messageReceived]);
 
   const isAuth = JSON.parse(localStorage.getItem("auth")) || false;
 
@@ -215,13 +233,13 @@ function LeaveRoomAndSendMessage({ socket }) {
   const setTheme = () => {
     switch (selectedColor) {
       case "black":
-        return "bg-black";
+        return "bg-black text-blue-500 border-r-2 border-blue-500";
       case "cyan":
-        return "bg-cyan-500";
+        return "bg-cyan-500 text-pink-500";
       case "red":
-        return "bg-red-800";
+        return "bg-red-800 text-orange-400";
       case "pink":
-        return "bg-pink-500";
+        return "bg-pink-500 text-blue-500";
       default:
         return "bg-[#121636]";
     }
@@ -241,7 +259,7 @@ function LeaveRoomAndSendMessage({ socket }) {
             />
             <button
               onClick={leaveRoom}
-              className={`${setTheme()} text-white rounded-xl py-3 px-2 font-chakra`}
+              className={`${setTheme()}  rounded-xl py-3 px-2 font-chakra`}
             >
               Leave Room
             </button>
@@ -274,11 +292,11 @@ function LeaveRoomAndSendMessage({ socket }) {
                     selectedColor === "red"
                       ? "text-white"
                       : selectedColor === "black"
-                      ? "text-green-500"
+                      ? "text-green-800"
                       : selectedColor === "cyan"
                       ? "text-black"
                       : "text-pink-500"
-                  }  text-3xl font-bold`}
+                  }  text-3xl font-extrabold`}
                 >
                   {obj.senderName}
                 </h1>
@@ -301,7 +319,7 @@ function LeaveRoomAndSendMessage({ socket }) {
             ))}
           </div>
         </div>
-        <div className="fixed bottom-0 flex flex-row p-4 max-w-full">
+        <div className="fixed bottom-2 flex flex-row p-4 max-w-full">
           <input
             type="text"
             placeholder="Enter Message.."
@@ -311,8 +329,8 @@ function LeaveRoomAndSendMessage({ socket }) {
           />
           {isAuth && (
             <button
-              onClick={sendMessage}
-              className={`${setTheme()} text-white border border-black rounded-r-xl px-3 font-chakra`}
+              onClick={() => sendMessage()}
+              className={`${setTheme()}   rounded-r-xl px-3 font-chakra`}
             >
               Send Message
             </button>
