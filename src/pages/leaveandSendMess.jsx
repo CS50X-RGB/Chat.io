@@ -27,9 +27,9 @@ function LeaveRoomAndSendMessage({ socket }) {
           withCredentials: true,
         }
       );
-      // for (let i = 0; i < response.data.content.length; i++) {
-      //   console.log(response.data.content[i]);
-      // }
+      for (let i = 0; i < response.data.content.length; i++) {
+        console.log(response.data.content[i]);
+      }
       const filteredMessages = response.data.content.filter(
         (msg) => !(msg.senderName === user.name && msg.message === message)
       );
@@ -196,7 +196,7 @@ function LeaveRoomAndSendMessage({ socket }) {
       console.log(`HERE ${buttonClicked}`);
       fetchUserDataForMessages();
     }
-  }, [buttonClicked, messageReceived]);
+  }, [messageReceived]);
 
   const isAuth = JSON.parse(localStorage.getItem("auth")) || false;
 
