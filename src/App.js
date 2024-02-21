@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes} from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { useSelector } from "react-redux";
 import JoinRoom from "./pages/joinRoom";
 import LeaveRoomAndSendMessage from "./pages/leaveandSendMess";
@@ -7,6 +7,8 @@ import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ResetPassword from "./pages/ResetPassword";
+import ForgetPassword from "./pages/ForgetPassword";
 import ViewProfile from "./pages/ViewProfile";
 import { Toaster } from "react-hot-toast";
 import { io } from "socket.io-client";
@@ -29,6 +31,8 @@ export default function App() {
             <Route path="/login" element={<Navigate to="/" />} />
             <Route path="/register" element={<Navigate to="/" />} />
             <Route path="/join" element={<JoinRoom socket={socket} />} />
+            <Route path="/resetPassword/:resetIdentifier" element={<ResetPassword />} />
+            <Route path="/forgotPassword" element={<ForgetPassword />} />
             <Route
               path="/chat/:id/:room"
               element={<LeaveRoomAndSendMessage socket={socket} />}
@@ -38,6 +42,8 @@ export default function App() {
           </>
         ) : (
           <>
+            <Route path="/resetPassword/:resetIdentifier" element={<ResetPassword />} />
+            <Route path="/forgotPassword" element={<ForgetPassword />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/join" element={<Navigate to="/login" />} />

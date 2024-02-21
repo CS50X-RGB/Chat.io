@@ -60,7 +60,7 @@ export function Login() {
             <strong>Success: </strong> {response.data.message}
           </div>
         ));
-        if(response.data.success){
+        if (response.data.success) {
           dispatch(login());
           console.log(isAuth);
           navigate("/");
@@ -78,9 +78,10 @@ export function Login() {
 
   return (
     <>
-
       <div className="bg-[#121636] pt-[10rem] p-[1rem] md:p-[3rem] shadow-xl shadow-black rounded-b-xl">
-        <h1 className="flex justify-center items-center text-4xl p-5 font-chakra text-blue-400">Login</h1>
+        <h1 className="flex justify-center items-center text-4xl p-5 font-chakra text-blue-400">
+          Login
+        </h1>
         <div className="flex p-2 md:p-7 flex-row gap-8 justify-center">
           <div className="hidden p-10  rounded-l-xl text-white md:flex items-center justify-center bg-gradient-to-tr from-blue-500 via-teal-400 to-black">
             <h1 className="flex flex-col font-ostwald text-4xl justify-center">
@@ -92,7 +93,9 @@ export function Login() {
             className="justify-center bg-black w-[50vh] flex flex-col gap-6 p-[1rem] items-center shadow-xl text-2xl rounded-r-xl shadow-blue-400 md:p-4 rounded-2xl"
             onSubmit={handleLogin}
           >
-            <h1 className="text-blue-500 font-ostwald font-bold text-5xl tracking-wider py-[1rem]">LOGIN</h1>
+            <h1 className="text-blue-500 font-ostwald font-bold text-5xl tracking-wider py-[1rem]">
+              LOGIN
+            </h1>
             <input
               type="email"
               placeholder="Your Email"
@@ -120,6 +123,12 @@ export function Login() {
               </Link>
             </div>
           </form>
+          <Link
+            to="/forgotPassword"
+            className="flex items-center justify-center font-bold bg-black px-6 py-3 rounded-2xl text-blue-500 font-ostwald hover:bg-blue-500 hover:text-black text-xl border border-dotted border-pink-300"
+          >
+            Forgot Password?
+          </Link>
         </div>
       </div>
     </>
