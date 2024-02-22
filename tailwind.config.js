@@ -1,15 +1,19 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  mode:"jit",
+  mode: "jit",
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
-    fontFamily:{
-      "chakra":["Chakra Petch","sans-serif"],
-      "ostwald":["Oswald",'sans-serif'],
-    }
+    extend: {
+      colors: {
+        text: "#82AAFF",
+      },
+      fontFamily: {
+        chakra: ["Chakra Petch", "sans-serif"],
+        ostwald: ["Oswald", "sans-serif"],
+      },
+    },
   },
   plugins: [],
-}
+};

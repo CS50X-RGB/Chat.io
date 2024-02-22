@@ -51,7 +51,6 @@ export default function App() {
             <Route path="/myProfile" element={<Navigate to="/login" />} />
           </>
         )}
-
         <Route path="/*" element={<NotFound />} />
       </Routes>
       <Toaster />

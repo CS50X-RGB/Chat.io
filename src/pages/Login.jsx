@@ -122,13 +122,13 @@ export function Login() {
                 Register
               </Link>
             </div>
+            <Link
+              to="/forgotPassword"
+              className="flex items-end justify-end font-bold bg-black px-6 py-3 rounded-2xl text-blue-500 font-ostwald hover:bg-blue-500 hover:text-black text-xl"
+            >
+              Forgot Password?
+            </Link>
           </form>
-          <Link
-            to="/forgotPassword"
-            className="flex items-center justify-center font-bold bg-black px-6 py-3 rounded-2xl text-blue-500 font-ostwald hover:bg-blue-500 hover:text-black text-xl border border-dotted border-pink-300"
-          >
-            Forgot Password?
-          </Link>
         </div>
       </div>
     </>

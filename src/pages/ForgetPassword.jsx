@@ -4,10 +4,11 @@ import { useState } from "react";
 export default function ForgetPassword() {
   const [email, setEmail] = useState("");
   const [response, setResponse] = useState("");
-  const formSubmit = async () => {
+  const formSubmit = async (e) => {
+    e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:3000/users/forgotPassword",
+        "http://localhost:3001/api/v1.1/users/forgotPassword",
         {
           email: email,
         },
@@ -26,19 +27,31 @@ export default function ForgetPassword() {
   };
   return (
     <>
-      <div className="flex flex-row justify-center items-center">
-        <form onSubmit={formSubmit}>
+      <div className="flex flex-row gap-8 min-h-screen justify-center items-center bg-black ">
+        <div className="hidden p-10  rounded-l-xl text-white md:flex items-center justify-center bg-gradient-to-tr from-blue-500 via-teal-400 to-black">
+          <h1 className="flex flex-col font-ostwald text-4xl justify-center">
+            Put Your Email id then go to your email to get further instructions
+          </h1>
+        </div>
+        <form
+          onSubmit={formSubmit}
+          className="flex flex-col justify-center items-center gap-4 px-[1rem] md:px-[3rem] py-[1rem] w-[70%] md:w-1/2 box2 rounded-r-[2rem] bg-back relative z-20"
+        >
+          <h1 className="text-blue-600 text-center font-bold font-ostwald text-5xl">Recover Password</h1>
           <input
             type="email"
             name="email"
             value={email}
             required
+            className="p-3 border-2 rounded-2xl text-blue-400 font-bold font-chakra focus:text-white border-blue-400 bg-black focus:bg-blue-600 w-full"
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your Email"
           />
-          <button type="submit">Recover Password</button>
+          <button type="submit" className="bg-blue-500 font-ostwald flex flex-row justify-center items-center text-black px-[2rem] md:px-[4rem]  py-[1rem] rounded-3xl shadow-text shadow-2xl hover:text-text hover:bg-black">
+            Recover Password
+          </button>
         </form>
-        <h1>{response}</h1>
+        <h1 className="bg-text text-center text-3xl font-ostwald">{response.message}</h1>
       </div>
     </>
   );
