@@ -3,11 +3,12 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function LeaveRoomAndSendMessage({ socket }) {
   const { state } = useLocation();
   const { selectedColor } = state || { selectedColor: "black" };
-
+  const { token } = useSelector((state) => state.auth);
   const [message, setMessage] = useState("");
   const [messageReceived, setMessageReceived] = useState([]);
   const [room, setRoom] = useState("");
@@ -23,6 +24,7 @@ function LeaveRoomAndSendMessage({ socket }) {
         {
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
           },
           withCredentials: true,
         }
@@ -37,25 +39,6 @@ function LeaveRoomAndSendMessage({ socket }) {
       setMessageReceived(filteredMessages);
     } catch (error) {
       console.log(error);
-    }
-  };
-
-  const getUserData = async (senderName) => {
-    try {
-      const response = await axios.get(
-        `http://localhost:3001/api/v1.1/users/getUser/${senderName}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      );
-
-      return response.data;
-    } catch (error) {
-      console.error(`Error fetching user data for ${senderName}:`, error);
-      return null;
     }
   };
 
@@ -91,6 +74,7 @@ function LeaveRoomAndSendMessage({ socket }) {
           {
             headers: {
               "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`,
             },
             withCredentials: true,
           }
@@ -100,9 +84,8 @@ function LeaveRoomAndSendMessage({ socket }) {
         console.error("Error fetching user profile:", error);
       }
     };
-
     fetchUserProfile();
-  }, []);
+  }, [token]);
 
   useEffect(() => {
     setRoom(roomno);
@@ -110,7 +93,6 @@ function LeaveRoomAndSendMessage({ socket }) {
       socket.emit("join_room", roomno);
       getMessages();
     }
-
     return () => {
       socket.off("r-m");
     };
@@ -154,11 +136,9 @@ function LeaveRoomAndSendMessage({ socket }) {
         if (userDataSet.size === 0) {
           console.log("No receivers are there");
         }
-
         try {
           if (messageReceived.length > 0) {
             console.log(messageReceived[messageReceived.length - 1]);
-
             const lastMessage = messageReceived[messageReceived.length - 1];
             console.log(Date.now());
             const response = await axios.post(
@@ -173,6 +153,7 @@ function LeaveRoomAndSendMessage({ socket }) {
               {
                 headers: {
                   "Content-Type": "application/json",
+                  "Authorization": `Bearer ${token}`,
                 },
                 withCredentials: true,
               }
@@ -196,7 +177,7 @@ function LeaveRoomAndSendMessage({ socket }) {
       console.log(`HERE ${buttonClicked}`);
       fetchUserDataForMessages();
     }
-  }, [messageReceived]);
+  }, [messageReceived,token]);
 
   const isAuth = JSON.parse(localStorage.getItem("auth")) || false;
 
@@ -265,7 +246,7 @@ function LeaveRoomAndSendMessage({ socket }) {
             </button>
           </div>
           <div
-            className="p-4 "
+            className="p-4"
             style={{ display: "flex", flexDirection: "column" }}
           >
             {messageReceived.map((obj, index) => (

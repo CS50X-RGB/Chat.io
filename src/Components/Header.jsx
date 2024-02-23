@@ -9,19 +9,20 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { ImProfile } from "react-icons/im";
 
 export default function Header() {
-  const { isAuth } = useSelector((state) => state.auth);
+  const { isAuth,token } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [image, setImage] = useState(null);
   const [userName, setUserName] = useState("");
   const [open, setOpen] = useState(false);
-
+  console.log(token); 
   useEffect(() => {
     if (isAuth) {
       axios
         .get("http://localhost:3001/api/v1.1/users/myProfile", {
           headers: {
             "Content-Type": "application/json",
+            "Authorization" :`Bearer ${token}`,
           },
           withCredentials: true,
         })

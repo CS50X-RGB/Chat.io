@@ -2,12 +2,12 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import SideBar from "../Components/Sidebar";
-
+import { useSelector } from "react-redux";
 function ViewProfile() {
   const { id } = useParams();
   const [user, setUser] = useState();
   const history = useNavigate();
-
+  const { token } = useSelector((state) => state.auth);
   useEffect(() => {
     if (id === "YOU") {
       history("/myProfile");
@@ -19,6 +19,7 @@ function ViewProfile() {
             {
               headers: {
                 "Content-Type": "application/json",
+                "Authorization" :`Bearer ${token}`,
               },
               withCredentials: true,
             }
@@ -29,6 +30,7 @@ function ViewProfile() {
             {
               headers: {
                 "Content-Type": "application/json",
+                "Authorization" :`Bearer ${token}`,
               },
               withCredentials: true,
             }
@@ -42,7 +44,7 @@ function ViewProfile() {
 
       fetchData();
     }
-  }, [id, history]);
+  }, [id, history,token]);
 
   return (
     <>

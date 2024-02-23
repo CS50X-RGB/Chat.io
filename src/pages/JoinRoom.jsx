@@ -19,7 +19,7 @@ const intitalState = "black";
 
 function JoinRoom({ socket }) {
   console.log("socket hai", socket);
-  const isAuth = useSelector((state) => state.auth.isAuth);
+  const { isAuth, token } = useSelector((state) => state.auth);
   const [room, setRoom] = useState("");
   const [userProfile, setUserProfile] = useState(null);
   const [selectedColor, dispatch] = useReducer(colorReducer, intitalState);
@@ -42,11 +42,11 @@ function JoinRoom({ socket }) {
         {
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           withCredentials: true,
         }
       );
-
       console.log("user data", response.data.user);
       setUserProfile(response.data.user);
     } catch (error) {
@@ -64,6 +64,10 @@ function JoinRoom({ socket }) {
             roomno: room,
           },
           {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
             withCredentials: true,
           }
         );
@@ -79,9 +83,11 @@ function JoinRoom({ socket }) {
         }
 
         socket.emit("join_room", room);
-        
-        navigate(`/chat/${userProfile._id}/${room}`, { state: { selectedColor } });
-        console.log("Color is ",selectedColor);
+
+        navigate(`/chat/${userProfile._id}/${room}`, {
+          state: { selectedColor },
+        });
+        console.log("Color is ", selectedColor);
       } catch (error) {
         toast.custom((t) => (
           <div className="border-2 border-white bg-gradient-to-tr from-red-400 via-red-500 to-red-700 text-white font-chakra p-3 rounded-md">
@@ -96,7 +102,7 @@ function JoinRoom({ socket }) {
       );
     }
   };
-  console.log("Color is ",selectedColor);
+  console.log("Color is ", selectedColor);
   return (
     <>
       <div className="bg-gradient-to-tr from-blue-600 to-fuchsia-500">
@@ -104,11 +110,13 @@ function JoinRoom({ socket }) {
           <Sidebar />
           <div className="flex flex-col text-black flex-1 justify-center gap-2 items-center">
             <div className="space-y-3">
-              <h1 className="text-4xl md:text-6xl font-ostwald">Set up color theme</h1>
+              <h1 className="text-4xl md:text-6xl font-ostwald">
+                Set up color theme
+              </h1>
               <p className="text-xl flex flex-row gap-3 p-4 font-ostwald">
                 Room Background Color:{" "}
                 {selectedColor === "black" ? (
-                <div className="bg-black h-10 w-10 rounded-full shadow-xl shadow-black" />
+                  <div className="bg-black h-10 w-10 rounded-full shadow-xl shadow-black" />
                 ) : null}
                 {selectedColor === "pink" ? (
                   <div className="bg-pink-400 h-10 w-10 rounded-full shadow-xl shadow-pink-400" />
@@ -147,7 +155,10 @@ function JoinRoom({ socket }) {
               </div>
             </div>
             <div>
-              <form onSubmit={joinRoom} className="max-w-full flex justify-center">
+              <form
+                onSubmit={joinRoom}
+                className="max-w-full flex justify-center"
+              >
                 <input
                   type="text"
                   placeholder="Enter Room No.."

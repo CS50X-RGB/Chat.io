@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import SideBar from "../Components/Sidebar";
 import image from "../assests/ChatAppHEro.webp";
 import { useEffect, useState } from "react";
-import { motion, useAnimation, useViewportScroll } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
 import { CardWrapper } from "../Components/Wrappers/CarWrapper";
 
 const TypingAnimation = ({ text, speed }) => {
@@ -36,7 +36,6 @@ const TypingAnimation = ({ text, speed }) => {
 export default function Home() {
   const isAuth = useSelector((store) => store.auth.isAuth);
   console.log(isAuth);
-  const { scrollYProgress } = useViewportScroll();
   return (
     <>
       <div className="flex flex-col pt-[5rem] gap-4">

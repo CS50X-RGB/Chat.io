@@ -8,14 +8,15 @@ import user1 from "../assests/userPanel.svg";
 export default function SideBar() {
   const [user, setUser] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
-  const isAuth = useSelector((state) => state.auth.isAuth);
-
+  const { isAuth, token } = useSelector((state) => state.auth);
+  console.log(token);
   useEffect(() => {
     if (isAuth) {
       axios
         .get("http://localhost:3001/api/v1.1/users/myProfile", {
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
           },
           withCredentials: true,
         })
@@ -27,7 +28,7 @@ export default function SideBar() {
           console.error("Error fetching user profile:", error);
         });
     }
-  }, [isAuth]);
+  }, [isAuth,token]);
   return (
     <>
       {!profileImage || !user ? (

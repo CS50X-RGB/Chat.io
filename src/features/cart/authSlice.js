@@ -1,8 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
+import Cookies from "js-cookie";
 
 const initialAuthState = {
-  isAuth: JSON.parse(localStorage.getItem("auth")) || false,
-  token: undefined,
+  isAuth: Cookies.get("isAuth") === "true" || false,
+  token: Cookies.get("token"),
 };
 
 const authSlice = createSlice({
@@ -10,16 +11,23 @@ const authSlice = createSlice({
   initialState: initialAuthState,
   reducers: {
     login: (state, action) => {
-      state.token = action.payload;
-      state.isAuth = !!action.payload;
-      if (state.isAuth) {
-        localStorage.setItem("auth", true);
+      const { token } = action.payload;
+      if (token) {
+        state.token = token;
+        state.isAuth = true;
+        // Store authentication state in cookies
+        Cookies.set("token", token);
+        Cookies.set("isAuth", true);
+      } else {
+        console.error("Token not provided in login action payload.");
       }
     },
     logout: (state) => {
       state.token = undefined;
       state.isAuth = false;
-      localStorage.setItem("auth", false);
+      // Clear authentication state from cookies
+      Cookies.remove("token");
+      Cookies.remove("isAuth");
     },
   },
 });

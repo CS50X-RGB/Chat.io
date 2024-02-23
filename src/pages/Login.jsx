@@ -60,8 +60,9 @@ export function Login() {
             <strong>Success: </strong> {response.data.message}
           </div>
         ));
+        console.log(response.data.token);
         if (response.data.success) {
-          dispatch(login());
+          dispatch(login({ token: response.data.token }));
           console.log(isAuth);
           navigate("/");
         }

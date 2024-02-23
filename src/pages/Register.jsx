@@ -9,12 +9,13 @@ import { IoMdAdd } from "react-icons/io";
 
 export default function Register() {
   const dispatch = useDispatch();
-  const { isAuth } = useSelector((state) => state.auth);
+  const { isAuth,token } = useSelector((state) => state.auth);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const [image, setImage] = useState(null);
+  console.log(token);
   const handleNameChange = (e) => {
     setName(e.target.value);
   };
@@ -46,6 +47,7 @@ export default function Register() {
           withCredentials: true,
         }
       );
+      console.log(response);
       if (response && response.data) {
         toast.custom((t) => (
           <div className="border-2 border-black bg-gradient-to-tr from-blue-500 via-blue-600 to-blue-700 text-black font-chakra p-3 rounded-md">
@@ -55,15 +57,16 @@ export default function Register() {
       }
       if(response.data.success){
         console.log(response.data.success);
-        dispatch(login());
+        console.log(response.data.token);
+        dispatch(login({ token: response.data.token }));
         console.log(isAuth);
         navigate("/");
-      }
-      
+      }    
     } catch (error) {
-      toast.custom((t) => (
+      const errorMessages = error.response.data.errors.map((error) => error.message).join(', ');
+        toast.custom((t) => (
         <div className="border-2 border-white bg-gradient-to-tr from-red-400 to-red-700 text-white font-chakra p-3 rounded-md">
-          <strong>Error:</strong> {error.response.data.message}
+          <strong>Error:</strong> {errorMessages}
         </div>
       ));
     }

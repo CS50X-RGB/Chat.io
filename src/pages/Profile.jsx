@@ -6,9 +6,10 @@ import SideBar from "../Components/Sidebar";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
-  const isAuth = useSelector((state) => state.auth.isAuth);
+  const {isAuth,token} = useSelector((state) => state.auth);
   const [recivers, setRecivers] = useState([]);
   const [chatters, setChatters] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -18,6 +19,7 @@ const Profile = () => {
             {
               headers: {
                 "Content-Type": "application/json",
+                "Authorization" :`Bearer ${token}`,
               },
               withCredentials: true,
             }
@@ -29,6 +31,7 @@ const Profile = () => {
               {
                 headers: {
                   "Content-Type": "application/json",
+                  "Authorization" :`Bearer ${token}`,
                 },
                 withCredentials: true,
               }
@@ -38,7 +41,6 @@ const Profile = () => {
             const chatter = new Set();
             chatResponse.data.message.forEach((message) => {
               updatedRecivers.add(message.room);
-
               message.content.forEach((content) => {
                 if (content.senderName !== response.data.user.name) {
                   chatter.add(content.senderName);
@@ -57,7 +59,7 @@ const Profile = () => {
     };
 
     fetchData();
-  }, [isAuth]);
+  }, [isAuth,token]);
 
   return (
     <>
