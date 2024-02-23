@@ -3,55 +3,83 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import SideBar from "../Components/Sidebar";
+import { IoMdAdd } from "react-icons/io";
+import { FaPencilAlt } from "react-icons/fa";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
-  const {isAuth,token} = useSelector((state) => state.auth);
+  const { isAuth, token } = useSelector((state) => state.auth);
   const [recivers, setRecivers] = useState([]);
   const [chatters, setChatters] = useState([]);
+  const [image, setImage] = useState("");
+  const [imageUpdated, setImageUpdated] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
 
+  const handleToggleEdit = (e) => {
+    e.preventDefault();
+    setEdit(!edit);
+  };
+
+  const convertToBase64 = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+
+      reader.onload = () => {
+        setImage(reader.result);
+        setImageUpdated(true);
+      };
+
+      reader.onerror = (error) => {
+        console.error(error);
+      };
+    }
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (isAuth) {
-          const response = await axios.get(
-            "http://localhost:3001/api/v1.1/users/myProfile",
+        const response = await axios.get(
+          "http://localhost:3001/api/v1.1/users/myProfile",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
+        );
+        setUser(response.data.user);
+        setName(response.data.user.name);
+        setEmail(response.data.user.email);
+        if (response.data.user) {
+          const chatResponse = await axios.get(
+            `http://localhost:3001/api/v1.1/chat/${response.data.user._id}`,
             {
               headers: {
                 "Content-Type": "application/json",
-                "Authorization" :`Bearer ${token}`,
+                Authorization: `Bearer ${token}`,
               },
               withCredentials: true,
             }
           );
-          setUser(response.data.user);
-          if (response.data.user) {
-            const chatResponse = await axios.get(
-              `http://localhost:3001/api/v1.1/chat/${response.data.user._id}`,
-              {
-                headers: {
-                  "Content-Type": "application/json",
-                  "Authorization" :`Bearer ${token}`,
-                },
-                withCredentials: true,
+          console.log(chatResponse);
+          const updatedRecivers = new Set();
+          const chatter = new Set();
+          chatResponse.data.message.forEach((message) => {
+            updatedRecivers.add(message.room);
+            message.content.forEach((content) => {
+              if (content.senderName !== response.data.user.name) {
+                chatter.add(content.senderName);
               }
-            );
-            console.log(chatResponse);
-            const updatedRecivers = new Set();
-            const chatter = new Set();
-            chatResponse.data.message.forEach((message) => {
-              updatedRecivers.add(message.room);
-              message.content.forEach((content) => {
-                if (content.senderName !== response.data.user.name) {
-                  chatter.add(content.senderName);
-                }
-                chatter.add("YOU");
-              });
+              chatter.add("YOU");
             });
-            console.log(chatter);
-            setChatters(Array.from(chatter));
-            setRecivers(Array.from(updatedRecivers));
-          }
+          });
+          console.log(chatter);
+          setChatters(Array.from(chatter));
+          setRecivers(Array.from(updatedRecivers));
         }
       } catch (error) {
         console.error("Error fetching user profile:", error);
@@ -59,12 +87,14 @@ const Profile = () => {
     };
 
     fetchData();
-  }, [isAuth,token]);
+  }, [isAuth, token]);
 
   return (
     <>
       {!user ? (
-        <div className="text-chakra bg-black flex justify-center items-center w-[100%] text-[3rem] text-blue-500  h-[100vh] font-chakra">Loading...</div>
+        <div className="text-chakra bg-black flex justify-center items-center w-[100%] text-[3rem] text-blue-500  h-[100vh] font-chakra">
+          Loading...
+        </div>
       ) : (
         <div className="bg-[#121636] pt-[5rem]">
           <div className="flex m-[2rem] flex-col md:flex-row justify-around  gap-3">
@@ -73,24 +103,80 @@ const Profile = () => {
               <div className="flex p-[1rem] md:p-[2rem] flex-col justify-center items-center">
                 {isAuth && user ? (
                   <>
-                    {user.profileImage ? (
-                      <img
-                        src={user.profileImage}
-                        alt={user.profileImage}
-                        className="m-7 w-full border-2 rounded-full border-pink-300"
+                    <div
+                      className={`rounded-full ${
+                        !image ? "p-[1rem]" : "p-[.5rem]"
+                      } relative border-2 border-text shadow-2xl shadow-black`}
+                    >
+                      <input
+                        type="file"
+                        id="fileInput"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={convertToBase64}
                       />
+                      <label htmlFor="fileInput" className="cursor-pointer">
+                        {user.profileImage ? (
+                          <>
+                            <img
+                              src={user.profileImage}
+                              alt="ProfileImage"
+                              className="rounded-full w-[10rem] h-[10rem] object-cover"
+                            />
+                            <IoMdAdd
+                              size={50}
+                              className="fill-blue-500 z-30 absolute -right-[1rem] bottom-[0.1rem]"
+                            />
+                          </>
+                        ) : (
+                          <IoMdAdd
+                            size={50}
+                            className="fill-blue-500 z-30 absolute -right-[.8rem] bottom-[2rem]"
+                          />
+                        )}
+                      </label>
+                    </div>
+                    {edit ? (
+                      <>
+                        <div className="flex flex-row justify-center items-center gap-4">
+                          <input
+                            type="text"
+                            id="name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            className="w-full rounded-xl border border-black p-2 text-xl text-black bg-text"
+                          />
+                          <button
+                            onClick={handleToggleEdit}
+                            className="fill-blue-500"
+                            type="button"
+                          >
+                            <FaPencilAlt size={34} className="fill-blue-600" />
+                          </button>
+                        </div>
+                      </>
                     ) : (
-                      <h1>No Profile Image</h1>
+                      <>
+                        <div className="flex flex-row justify-center items-center gap-5">
+                          <span className="text-md font-ostwald md:text-5xl">
+                            Hi {user.name}
+                          </span>
+                          <button onClick={handleToggleEdit} type="button">
+                            <FaPencilAlt size={34} className="fill-blue-500" />
+                          </button>
+                        </div>
+                      </>
                     )}
-
-                    <h1 className="text-3xl md:text-5xl font-ostwald">
-                      Hi {user.name}!
-                    </h1>
-                    <h1 className="font-ostwald">How're you doin'?</h1>
+                    <h1 className="font-chakra text-2xl font-bold">How're you doin'?</h1>
                     {user.createdAt && (
-                      <h1>
+                      <h1 className="font-chakra text-2xl font-bold">
                         Joined {new Date(user.createdAt).toLocaleDateString()}
                       </h1>
+                    )}
+                    {edit ? (
+                      <button onClick={handleToggleEdit} type="submit" className="bg-blue-600 shadow-2xl shadow-black px-6 py-3 text-2xl rounded-full font-chakra hover:bg-black hover:text-blue-500">Update Details</button>
+                    ): (
+                      <></>
                     )}
                     <div className="flex p-6 flex-col justify-center items-center">
                       <h1 className="text-xl md:text-3xl font-ostwald">
@@ -102,7 +188,7 @@ const Profile = () => {
                   <p>Welcome</p>
                 )}
               </div>
-              <div className="flex flex-end bg-gradient-to-r from-blue-300 via-cyan-500 to-pink-500 shadow-top-left shadow-2xl bg-blend-darken mix-blend-normal brightness-110 blur w-[10rem] rounded-r-full"></div>
+              <div className="flex flex-end bg-gradient-to-r from-blue-300 via-cyan-500 to-pink-500 shadow-top-left shadow-2xl bg-blend-darken mix-blend-normal brightness-110 blur w-[10rem] rounded-r-full" />
             </div>
             <div className="flex justify-around flex-row flex-1 text-white rounded-2xl shadow-2xl shadow-pink-300 bg-cyan-400/30 my-[6rem] text-center w-full md:w-1/2 max-h-[25%]">
               <div className="flex p-[2rem] font-ostwald flex-col justify-center items-center">
