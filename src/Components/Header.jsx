@@ -43,6 +43,7 @@ export default function Header() {
         {
           headers: {
             "Content-Type": "application/json",
+            "Authorization" :`Bearer ${token}`,
           },
           withCredentials: true,
         }
@@ -133,7 +134,7 @@ export default function Header() {
           />
         </div>
         {open && (
-          <div className="md:hidden z-20 shadow-2xl shadow-pink-500 top-[100px] left-0 absolute w-full p-5 flex flex-col gap-4 bg-[#121636]">
+          <div className="md:hidden z-20 shadow-2xl shadow-pink-500 top-[100px] left-0 absolute w-full p-5 flex flex-col gap-4 bg-black">
             {image && (
               <div className="flex flex-row gap-[3rem]">
                 <img

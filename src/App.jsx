@@ -22,8 +22,8 @@ let socket = io.connect("http://localhost:3001");
 export const userServer = `http://localhost:3001/api/v1.1/users`;
 
 export default function App() {
-  const { isAuth, token } = useSelector((state) => state.auth);
-  console.log(`App has token of ${token}`);
+  const { isAuth } = useSelector((state) => state.auth);
+  // console.log(`App has token of ${token}`);
   return (
     <>
       <Header />

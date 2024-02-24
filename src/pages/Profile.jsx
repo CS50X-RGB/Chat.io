@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { toast } from "react-hot-toast";
 import { Link } from "react-router-dom";
 import SideBar from "../Components/Sidebar";
 import { IoMdAdd } from "react-icons/io";
@@ -14,6 +15,7 @@ const Profile = () => {
   const [image, setImage] = useState("");
   const [imageUpdated, setImageUpdated] = useState(false);
   const [edit, setEdit] = useState(false);
+  const [editEamil, setEditEamil] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
 
@@ -22,6 +24,10 @@ const Profile = () => {
     setEdit(!edit);
   };
 
+  const handleToggleEmailEdit = (e) => {
+    e.preventDefault();
+    setEditEamil(!editEamil);
+  };
   const convertToBase64 = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -36,6 +42,44 @@ const Profile = () => {
       reader.onerror = (error) => {
         console.error(error);
       };
+    }
+  };
+
+  const handleUpdateEdit = async () => {
+    try {
+      const response = await axios.put(
+        "http://localhost:3001/api/v1.1/users/updateDetails",
+        {
+          name: edit ? name : undefined,
+          email: editEamil ? email : undefined,
+          profilePic: imageUpdated ? image : undefined,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+      if (response.data.sucess) {
+        setName(response.data.user.name);
+        setImage(response.data.user.profilePic);
+        setEmail(response.data.user.email);
+        window.location.reload();
+      }
+      toast.custom((t) => (
+        <div className="border-2 border-black bg-gradient-to-tr from-green-500 via-green-600 to-green-700 text-black font-chakra p-3 rounded-md">
+          <strong>{response.data.message}</strong>
+        </div>
+      ));
+    } catch (error) {
+      const errorMessages = error.response.data.errors.map((error) => error.message).join(', ');
+        toast.custom((t) => (
+        <div className="border-2 border-white bg-gradient-to-tr from-red-400 to-red-700 text-white font-chakra p-3 rounded-md">
+          <strong>Error:</strong> {errorMessages}
+        </div>
+      ));
     }
   };
   useEffect(() => {
@@ -85,7 +129,7 @@ const Profile = () => {
         console.error("Error fetching user profile:", error);
       }
     };
-
+    console.log(recivers.length);
     fetchData();
   }, [isAuth, token]);
 
@@ -100,7 +144,7 @@ const Profile = () => {
           <div className="flex m-[2rem] flex-col md:flex-row justify-around  gap-3">
             {isAuth && <SideBar />}
             <div className="flex justify-around flex-row flex-1 text-white rounded-2xl shadow-2xl shadow-pink-300 bg-cyan-400/30 my-[6rem] text-center w-full md:w-1/2 max-h-[25%]">
-              <div className="flex p-[1rem] md:p-[2rem] flex-col justify-center items-center">
+              <div className="flex p-[1rem] md:p-[2rem] flex-col justify-center items-center gap-3">
                 {isAuth && user ? (
                   <>
                     <div
@@ -136,6 +180,9 @@ const Profile = () => {
                         )}
                       </label>
                     </div>
+                    <h1 className="font-chakra text-2xl font-bold">
+                      How're you doin'?
+                    </h1>
                     {edit ? (
                       <>
                         <div className="flex flex-row justify-center items-center gap-4">
@@ -158,7 +205,7 @@ const Profile = () => {
                     ) : (
                       <>
                         <div className="flex flex-row justify-center items-center gap-5">
-                          <span className="text-md font-ostwald md:text-5xl">
+                          <span className="text-xl font-ostwald md:text-5xl">
                             Hi {user.name}
                           </span>
                           <button onClick={handleToggleEdit} type="button">
@@ -167,15 +214,50 @@ const Profile = () => {
                         </div>
                       </>
                     )}
-                    <h1 className="font-chakra text-2xl font-bold">How're you doin'?</h1>
+                    {editEamil ? (
+                      <div className="flex flex-row justify-center items-center gap-4">
+                        <input
+                          type="email"
+                          id="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="w-full font-chakra rounded-xl border border-black p-2 text-xl text-black bg-text"
+                        />
+                        <button
+                          onClick={handleToggleEmailEdit}
+                          className="fill-blue-500"
+                          type="button"
+                        >
+                          <FaPencilAlt size={34} className="fill-blue-600" />
+                        </button>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="flex flex-row justify-center items-center gap-5">
+                          <span className="text-xl font-ostwald md:text-3xl">
+                            {user.email}
+                          </span>
+                          <button onClick={handleToggleEmailEdit} type="button">
+                            <FaPencilAlt size={34} className="fill-blue-500" />
+                          </button>
+                        </div>
+                      </>
+                    )}
+                    <Link className="bg-blue-700 rounded-xl font-ostwald shadow-blue-500 shadow-xl px-6 py-3" to={"/forgotPassword"}>Reset Password?</Link>
                     {user.createdAt && (
                       <h1 className="font-chakra text-2xl font-bold">
                         Joined {new Date(user.createdAt).toLocaleDateString()}
                       </h1>
                     )}
-                    {edit ? (
-                      <button onClick={handleToggleEdit} type="submit" className="bg-blue-600 shadow-2xl shadow-black px-6 py-3 text-2xl rounded-full font-chakra hover:bg-black hover:text-blue-500">Update Details</button>
-                    ): (
+                    {edit || editEamil || imageUpdated ? (
+                      <button
+                        onClick={handleUpdateEdit}
+                        type="submit"
+                        className="bg-blue-600 shadow-2xl shadow-black px-6 py-3 text-2xl rounded-full font-chakra hover:bg-black hover:text-blue-500"
+                      >
+                        Update Details
+                      </button>
+                    ) : (
                       <></>
                     )}
                     <div className="flex p-6 flex-col justify-center items-center">
@@ -206,7 +288,7 @@ const Profile = () => {
                       >
                         Room id : {room}
                         <h1 className="text-sm font-ostwald">
-                          Chatters in the room :
+                          `Chatters in the room : {chatters.length}
                         </h1>
                       </Link>
                       <div className="overflow-y space-y-4 flex flex-col items-center justify-center ring-2 ring-pink-300 rounded-xl">

@@ -89,12 +89,22 @@ function JoinRoom({ socket }) {
         });
         console.log("Color is ", selectedColor);
       } catch (error) {
-        toast.custom((t) => (
-          <div className="border-2 border-white bg-gradient-to-tr from-red-400 via-red-500 to-red-700 text-white font-chakra p-3 rounded-md">
-            <strong>Error:</strong> {error.response.data.message}
-          </div>
-        ));
-        console.error("Error joining room:", error);
+        // toast.custom((t) => (
+        //   <div className="border-2 border-white bg-gradient-to-tr from-red-400 via-red-500 to-red-700 text-white font-chakra p-3 rounded-md">
+        //     <strong>Error:</strong> {error.response.data.message}
+        //   </div>
+        // ));
+        // console.error("Error joining room:", error);
+        if (error.response.data.erros) {
+          const errorMessages = error.response.data.erros
+            .map((error) => error.message)
+            .join(", ");
+          toast.custom((t) => (
+            <div className="border-2 border-white bg-gradient-to-tr from-red-400 to-red-700 text-white font-chakra p-3 rounded-md">
+              <strong>Error:</strong> {errorMessages}
+            </div>
+          ));
+        }
       }
     } else {
       console.log(

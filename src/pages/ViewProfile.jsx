@@ -24,6 +24,7 @@ function ViewProfile() {
               withCredentials: true,
             }
           );
+          console.log(firstResponse);
           const secondResponse = await axios.get(
             `http://localhost:3001/api/v1.1/users/getUserData/${firstResponse.data._id}`,
             {

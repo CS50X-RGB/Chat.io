@@ -62,8 +62,8 @@ export default function Home() {
         <h1 className="text-4xl font-bold text-[#7bec39] font-ostwald text-center p-5">
           How does this work?
         </h1>
-        <div className="flex flex-col md:flex-row justify-around p-[1rem] gap-4 rounded-full border border-black">
-          <CardWrapper className="rotate-0 transform translate-x-5 translate-y-0">
+        <div className="flex flex-col md:flex-row justify-center items-center md:justify-around p-[1rem] gap-4 rounded-full border border-black">
+          <CardWrapper className="rotate-0 flex justify-center transform translate-x-5 translate-y-0">
             1st
           </CardWrapper>
           <CardWrapper className="rotate-120 transform translate-x-0 translate-y-5">
