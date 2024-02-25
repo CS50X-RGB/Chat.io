@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 
+
 function LeaveRoomAndSendMessage({ socket }) {
   const { state } = useLocation();
   const { selectedColor } = state || { selectedColor: "black" };

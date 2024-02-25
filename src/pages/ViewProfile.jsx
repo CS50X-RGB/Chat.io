@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import SideBar from "../Components/Sidebar";
 import { useSelector } from "react-redux";
+import Footer from "../Components/Footer";
 function ViewProfile() {
   const { id } = useParams();
   const [user, setUser] = useState();
@@ -86,6 +87,7 @@ function ViewProfile() {
               )}
             </div>
           </div>
+          <Footer />
         </>
       )}
     </>

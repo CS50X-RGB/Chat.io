@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
+import Footer from "../Components/Footer";
 
 export default function ForgetPassword() {
   const [email, setEmail] = useState("");
@@ -53,6 +54,7 @@ export default function ForgetPassword() {
         </form>
         <h1 className= "text-center text-xl md:text-3xl text-green-600 font-ostwald">{response.message}</h1>
       </div>
+      <Footer />
     </>
   );
 }

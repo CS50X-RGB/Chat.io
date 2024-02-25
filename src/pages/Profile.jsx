@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import SideBar from "../Components/Sidebar";
 import { IoMdAdd } from "react-icons/io";
 import { FaPencilAlt } from "react-icons/fa";
+import Footer from "../Components/Footer";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -62,7 +63,7 @@ const Profile = () => {
           withCredentials: true,
         }
       );
-      if (response.data.sucess) {
+      if (response.data.success) {
         setName(response.data.user.name);
         setImage(response.data.user.profilePic);
         setEmail(response.data.user.email);
@@ -74,14 +75,15 @@ const Profile = () => {
         </div>
       ));
     } catch (error) {
-      const errorMessages = error.response.data.errors.map((error) => error.message).join(', ');
-        toast.custom((t) => (
+      const errorMessages = error.response?.data?.errors?.map((error) => error.message).join(', ');
+      toast.custom((t) => (
         <div className="border-2 border-white bg-gradient-to-tr from-red-400 to-red-700 text-white font-chakra p-3 rounded-md">
-          <strong>Error:</strong> {errorMessages}
+          <strong>Error:</strong> {errorMessages || 'An error occurred'}
         </div>
       ));
     }
   };
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -280,9 +282,8 @@ const Profile = () => {
                 </h3>
                 <div className="grid grid-rows-2 md:grid-cols-2 p-5 gap-4">
                   {recivers.map((room, id) => (
-                    <>
+                    <React.Fragment key={id}>
                       <Link
-                        key={id}
                         to={`/chat/${user._id}/${room}`}
                         className="bg-cyan-500 flex flex-col px-12 py-3 my-3 rounded-full shadow-2xl shadow-pink-700/60"
                       >
@@ -302,7 +303,7 @@ const Profile = () => {
                           </Link>
                         ))}
                       </div>
-                    </>
+                    </React.Fragment>
                   ))}
                 </div>
               </div>
@@ -311,6 +312,7 @@ const Profile = () => {
           </div>
         </div>
       )}
+      <Footer />
     </>
   );
 };

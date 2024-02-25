@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-hot-toast";
-
+import Footer from "../Components/Footer";
 export default function ResetPassword() {
   const { resetIdentifier } = useParams("");
   const [password, setPassword] = useState("");
@@ -68,6 +68,7 @@ export default function ResetPassword() {
           </button>
         </form>
       </div>
+      <Footer/>
     </>
   );
 }

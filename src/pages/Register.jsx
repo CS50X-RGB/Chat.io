@@ -6,6 +6,7 @@ import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../features/cart/authSlice";
 import { IoMdAdd } from "react-icons/io";
+import Footer from "../Components/Footer";
 
 export default function Register() {
   const dispatch = useDispatch();
@@ -183,6 +184,7 @@ export default function Register() {
           </form>
         </div>
       </div>
+      <Footer />
     </>
   );
 }

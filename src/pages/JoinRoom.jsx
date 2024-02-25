@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import Sidebar from "../Components/Sidebar";
+import Footer from "../Components/Footer";
 
 const colorReducer = (state, action) => {
   switch (action.type) {
@@ -167,7 +168,7 @@ function JoinRoom({ socket }) {
             <div>
               <form
                 onSubmit={joinRoom}
-                className="max-w-full flex justify-center"
+                className="max-w-full flex justify-center p-[2rem]"
               >
                 <input
                   type="text"
@@ -184,6 +185,7 @@ function JoinRoom({ socket }) {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 }
