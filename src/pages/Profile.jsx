@@ -49,7 +49,7 @@ const Profile = () => {
   const handleUpdateEdit = async () => {
     try {
       const response = await axios.put(
-        "http://localhost:3001/api/v1.1/users/updateDetails",
+        "https://chat-ioserver.onrender.com/api/v1.1/users/updateDetails",
         {
           name: edit ? name : undefined,
           email: editEamil ? email : undefined,
@@ -88,7 +88,7 @@ const Profile = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3001/api/v1.1/users/myProfile",
+          "https://chat-ioserver.onrender.com/api/v1.1/users/myProfile",
           {
             headers: {
               "Content-Type": "application/json",
@@ -102,7 +102,7 @@ const Profile = () => {
         setEmail(response.data.user.email);
         if (response.data.user) {
           const chatResponse = await axios.get(
-            `http://localhost:3001/api/v1.1/chat/${response.data.user._id}`,
+            `https://chat-ioserver.onrender.com/api/v1.1/chat/${response.data.user._id}`,
             {
               headers: {
                 "Content-Type": "application/json",

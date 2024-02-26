@@ -12,7 +12,7 @@ export default function ResetPassword() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `http://localhost:3001/api/v1.1/users/resetpassword/${resetIdentifier}`,
+        `https://chat-ioserver.onrender.com/api/v1.1/users/resetpassword/${resetIdentifier}`,
         {
           newpass: password,
         },

@@ -9,6 +9,7 @@ import ChatRoom1 from "../assests/ChatRoom.png";
 import Join from "../assests/Join.png";
 import History from "../assests/History.png";
 import { Link } from "react-router-dom";
+import { userServer } from "../App";
 
 const TypingAnimation = ({ text, speed }) => {
   const [displayingText, setDisplayingText] = useState("");
@@ -41,7 +42,7 @@ export default function Home() {
   const isAuth = useSelector((store) => store.auth.isAuth);
   const fadeInControls = useAnimation();
   const fadeInRef = useRef(null);
-
+  console.log(`${userServer}`);
   useEffect(() => {
     const handleScroll = () => {
       if (fadeInRef.current) {

@@ -39,7 +39,7 @@ function JoinRoom({ socket }) {
   const fetchUserProfile = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3001/api/v1.1/users/myProfile",
+        "https://chat-ioserver.onrender.com/api/v1.1/users/myProfile",
         {
           headers: {
             "Content-Type": "application/json",
@@ -60,7 +60,7 @@ function JoinRoom({ socket }) {
     if (isAuth && room !== "" && userProfile) {
       try {
         const response = await axios.post(
-          "http://localhost:3001/api/v1.1/chat/join",
+          "https://chat-ioserver.onrender.com/api/v1.1/chat/join",
           {
             roomno: room,
           },

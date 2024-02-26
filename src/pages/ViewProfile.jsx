@@ -16,7 +16,7 @@ function ViewProfile() {
       const fetchData = async () => {
         try {
           const firstResponse = await axios.get(
-            `http://localhost:3001/api/v1.1/users/getUser/${id}`,
+            `https://chat-ioserver.onrender.com/api/v1.1/users/getUser/${id}`,
             {
               headers: {
                 "Content-Type": "application/json",
@@ -27,7 +27,7 @@ function ViewProfile() {
           );
           console.log(firstResponse);
           const secondResponse = await axios.get(
-            `http://localhost:3001/api/v1.1/users/getUserData/${firstResponse.data._id}`,
+            `https://chat-ioserver.onrender.com/api/v1.1/users/getUserData/${firstResponse.data._id}`,
             {
               headers: {
                 "Content-Type": "application/json",

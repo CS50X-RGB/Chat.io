@@ -18,7 +18,7 @@ const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const ForgetPassword = lazy(() => import("./pages/ForgetPassword"));
 const ViewProfile = lazy(() => import("./pages/ViewProfile"));
 
-let socket = io.connect("http://localhost:3001");
+let socket = io.connect("https://chat-ioserver.onrender.com");
 export const userServer = `http://localhost:3001/api/v1.1/users`;
 
 export default function App() {

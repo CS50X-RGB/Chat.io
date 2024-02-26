@@ -34,7 +34,7 @@ export default function Register() {
 
     try {
       const response = await axios.post(
-        `http://localhost:3001/api/v1.1/users/register`,
+        `https://chat-ioserver.onrender.com/api/v1.1/users/register`,
         {
           name,
           email,

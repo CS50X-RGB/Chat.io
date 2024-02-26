@@ -21,7 +21,7 @@ function LeaveRoomAndSendMessage({ socket }) {
   const getMessages = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3001/api/v1.1/chat/chat/${roomno}`,
+        `https://chat-ioserver.onrender.com/api/v1.1/chat/chat/${roomno}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -71,7 +71,7 @@ function LeaveRoomAndSendMessage({ socket }) {
     const fetchUserProfile = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3001/api/v1.1/users/myProfile",
+          "https://chat-ioserver.onrender.com/api/v1.1/users/myProfile",
           {
             headers: {
               "Content-Type": "application/json",
