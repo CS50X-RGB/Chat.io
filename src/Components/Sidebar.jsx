@@ -13,7 +13,7 @@ export default function SideBar() {
   useEffect(() => {
     if (isAuth) {
       axios
-        .get("http://localhost:3001/api/v1.1/users/myProfile", {
+        .get("https://chat-ioserver.onrender.com/api/v1.1/users/myProfile", {
           headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`,
