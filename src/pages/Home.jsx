@@ -76,9 +76,9 @@ export default function Home() {
             </p>
           </div>
           <motion.div
-            initial={{ scale: 0.4, y: -50 }}
-            animate={{ scale: 1, y: 0 }}
-            className="w-[60vh] md:w-[40vh] pt-[5rem]"
+            initial={{ scale: 0.8, y: -50 }}
+            animate={{ scale: 1.1, y: 0 }}
+            className="w-[60vh] md:w-[40vh] pt-[5rem] pr-[.3rem]"
             transition={{
               type: "spring",
               stiffness: 0.6,
@@ -145,13 +145,14 @@ export default function Home() {
                 and send message to everyone present in the room
                 {isAuth ? (
                   <>
-                    <motion.button 
-                    whileHover={{
-                      scale : 1.1,
-                      textShadow : "0px 0px 8px rgb(2,255,255)",
-                      boxShadow : "0px 0px 16px rgb(0,0,0)"
-                    }}
-                    className="bg-black text-blue-500 text-center px-[1rem] py-[.5rem] rounded-xl">
+                    <motion.button
+                      whileHover={{
+                        scale: 1.1,
+                        textShadow: "0px 0px 8px rgb(2,255,255)",
+                        boxShadow: "0px 0px 16px rgb(0,0,0)",
+                      }}
+                      className="bg-black text-blue-500 text-center px-[1rem] py-[.5rem] rounded-xl"
+                    >
                       <Link to={"/join"}>Join Room</Link>
                     </motion.button>
                     <p>Just Join Room and start chatting..</p>
