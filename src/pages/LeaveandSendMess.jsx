@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 function LeaveRoomAndSendMessage({ socket }) {
   const { state } = useLocation();
   const { selectedColor } = state || { selectedColor: "black" };
-  const { token } = useSelector((state) => state.auth);
+  const { isAuth,token } = useSelector((state) => state.auth);
   const [message, setMessage] = useState("");
   const [messageReceived, setMessageReceived] = useState([]);
   const [room, setRoom] = useState("");
@@ -179,8 +179,6 @@ function LeaveRoomAndSendMessage({ socket }) {
       fetchUserDataForMessages();
     }
   }, [messageReceived,token]);
-
-  const isAuth = JSON.parse(localStorage.getItem("auth")) || false;
 
   const getMessageColor = (a, b) => {
     switch (selectedColor) {
