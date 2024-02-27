@@ -5,7 +5,6 @@ import { Toaster } from "react-hot-toast";
 import { io } from "socket.io-client";
 import "./index.css";
 import Header from "./Components/Header";
-import Footer from "./Components/Footer";
 
 const JoinRoom = lazy(() => import("./pages/JoinRoom"));
 const LeaveRoomAndSendMessage = lazy(() => import("./pages/LeaveandSendMess"));

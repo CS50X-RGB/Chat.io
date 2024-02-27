@@ -143,7 +143,7 @@ function LeaveRoomAndSendMessage({ socket }) {
             const lastMessage = messageReceived[messageReceived.length - 1];
             console.log(Date.now());
             const response = await axios.post(
-              `http://localhost:3001/api/v1.1/chat/chat/${id}/${roomno}`,
+              `https://chat-ioserver.onrender.com/api/v1.1/chat/chat/${id}/${roomno}`,
               {
                 content: {
                   senderName: lastMessage.senderName,

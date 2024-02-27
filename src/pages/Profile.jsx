@@ -12,14 +12,13 @@ const Profile = () => {
   const [user, setUser] = useState(null);
   const { isAuth, token } = useSelector((state) => state.auth);
   const [recivers, setRecivers] = useState([]);
-  const [chatters, setChatters] = useState([]);
   const [image, setImage] = useState("");
   const [imageUpdated, setImageUpdated] = useState(false);
   const [edit, setEdit] = useState(false);
-  const [editEamil, setEditEamil] = useState(false);
+  const [editEmail, setEditEmail] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-
+  const [visible, setVisible] = useState(false);
   const handleToggleEdit = (e) => {
     e.preventDefault();
     setEdit(!edit);
@@ -27,8 +26,9 @@ const Profile = () => {
 
   const handleToggleEmailEdit = (e) => {
     e.preventDefault();
-    setEditEamil(!editEamil);
+    setEditEmail(!editEmail);
   };
+
   const convertToBase64 = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -52,7 +52,7 @@ const Profile = () => {
         "https://chat-ioserver.onrender.com/api/v1.1/users/updateDetails",
         {
           name: edit ? name : undefined,
-          email: editEamil ? email : undefined,
+          email: editEmail ? email : undefined,
           profilePic: imageUpdated ? image : undefined,
         },
         {
@@ -75,15 +75,17 @@ const Profile = () => {
         </div>
       ));
     } catch (error) {
-      const errorMessages = error.response?.data?.errors?.map((error) => error.message).join(', ');
+      const errorMessages = error.response?.data?.errors
+        ?.map((error) => error.message)
+        .join(", ");
       toast.custom((t) => (
         <div className="border-2 border-white bg-gradient-to-tr from-red-400 to-red-700 text-white font-chakra p-3 rounded-md">
-          <strong>Error:</strong> {errorMessages || 'An error occurred'}
+          <strong>Error:</strong> {errorMessages || "An error occurred"}
         </div>
       ));
     }
   };
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -111,27 +113,16 @@ const Profile = () => {
               withCredentials: true,
             }
           );
-          console.log(chatResponse);
-          const updatedRecivers = new Set();
-          const chatter = new Set();
-          chatResponse.data.message.forEach((message) => {
-            updatedRecivers.add(message.room);
-            message.content.forEach((content) => {
-              if (content.senderName !== response.data.user.name) {
-                chatter.add(content.senderName);
-              }
-              chatter.add("YOU");
-            });
-          });
-          console.log(chatter);
-          setChatters(Array.from(chatter));
-          setRecivers(Array.from(updatedRecivers));
+          const rooms = chatResponse.data.main.map((room) => ({
+            roomId: room.room,
+            chattersCount: room.finUsers,
+          }));
+          setRecivers(rooms);
         }
       } catch (error) {
         console.error("Error fetching user profile:", error);
       }
     };
-    console.log(recivers.length);
     fetchData();
   }, [isAuth, token]);
 
@@ -216,7 +207,7 @@ const Profile = () => {
                         </div>
                       </>
                     )}
-                    {editEamil ? (
+                    {editEmail ? (
                       <div className="flex flex-row justify-center items-center gap-4">
                         <input
                           type="email"
@@ -245,13 +236,18 @@ const Profile = () => {
                         </div>
                       </>
                     )}
-                    <Link className="bg-blue-700 rounded-xl font-ostwald shadow-blue-500 shadow-xl px-6 py-3" to={"/forgotPassword"}>Reset Password?</Link>
+                    <Link
+                      className="bg-blue-700 rounded-xl font-ostwald shadow-blue-500 shadow-xl px-6 py-3"
+                      to={"/forgotPassword"}
+                    >
+                      Reset Password?
+                    </Link>
                     {user.createdAt && (
                       <h1 className="font-chakra text-2xl font-bold">
                         Joined {new Date(user.createdAt).toLocaleDateString()}
                       </h1>
                     )}
-                    {edit || editEamil || imageUpdated ? (
+                    {edit || editEmail || imageUpdated ? (
                       <button
                         onClick={handleUpdateEdit}
                         type="submit"
@@ -280,28 +276,43 @@ const Profile = () => {
                 <h3 className="text-lg md:text-3xl flex">
                   See Your Joined Room:{" "}
                 </h3>
-                <div className="grid grid-rows-2 md:grid-cols-2 p-5 gap-4">
+                <div className="grid grid-rows-2 md:grid-cols-2 p-5 gap-4 overflow-y-scroll">
                   {recivers.map((room, id) => (
                     <React.Fragment key={id}>
-                      <Link
-                        to={`/chat/${user._id}/${room}`}
-                        className="bg-cyan-500 flex flex-col px-12 py-3 my-3 rounded-full shadow-2xl shadow-pink-700/60"
-                      >
-                        Room id : {room}
-                        <h1 className="text-sm font-ostwald">
-                          `Chatters in the room : {chatters.length}
-                        </h1>
-                      </Link>
-                      <div className="overflow-y space-y-4 flex flex-col items-center justify-center ring-2 ring-pink-300 rounded-xl">
-                        {chatters.map((talker, talkerId) => (
-                          <Link
-                            to={`/profile/${talker}`}
-                            className="cursor-pointer text-pink-400 border-b-2 border-b-black"
-                            key={talkerId}
-                          >
-                            {talker}
-                          </Link>
-                        ))}
+                      <div className="flex flex-col">
+                        <Link
+                          to={`/chat/${user._id}/${room.roomId}`}
+                          className="bg-cyan-500 flex flex-col px-12 py-3 my-3 rounded-full shadow-2xl shadow-pink-700/60 hover:bg-black"
+                        >
+                          Room id : {room.roomId}
+                          <h1 className="text-sm font-ostwald">
+                            Chatters in the room : {room.chattersCount.length}
+                          </h1>
+                        </Link>
+                        <button
+                          className={`${
+                            visible ? "border-b-2 border-black" : ""
+                          }`}
+                          onClick={() => setVisible(!visible)}
+                        >
+                          See Chatters in the Room
+                        </button>
+                        {visible ? (
+                          <div className="flex flex-col">
+                            <h1>Chatters Name :</h1>
+                            {room.chattersCount.map((chatter, index) => (
+                              <Link
+                                to={`/profile/${chatter}`}
+                                key={index}
+                                className="bg-cyan-300 text-black px-2 py-4 flex justify-center border border-pink-600 rounded-2xl shadow-2xl shadow-pink-600 items-center "
+                              >
+                                {chatter}
+                              </Link>
+                            ))}
+                          </div>
+                        ) : (
+                          <></>
+                        )}
                       </div>
                     </React.Fragment>
                   ))}
