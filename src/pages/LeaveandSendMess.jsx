@@ -229,29 +229,29 @@ function LeaveRoomAndSendMessage({ socket }) {
     <>
       <div className={`min-h-screen ${setTheme()}`}>
         <div className="pt-[10rem] px-4">
-          <div className="fixed p-3 flex flex-row justify-between">
+          <div className="fixed p-3 flex flex-row">
             <input
               type="text"
               placeholder="Enter Room No.."
               value={room}
               readOnly
-              className="text-blue-700 flex flex-row justify-center items-center p-3 rounded-l-lg focus:bg-blue-300 font-chakra"
+              className="text-blue-700 bg-black flex flex-row justify-center items-center p-3 rounded-l-lg focus:bg-blue-300 font-chakra"
             />
             <button
               onClick={leaveRoom}
-              className={`${setTheme()}  rounded-xl py-3 px-2 font-chakra`}
+              className={`${setTheme()} object-cover rounded-xl py-3 px-2 font-chakra`}
             >
               Leave Room
             </button>
           </div>
           <div
-            className="p-4"
+            className="p-4 z-20"
             style={{ display: "flex", flexDirection: "column" }}
           >
             {messageReceived.map((obj, index) => (
               <div
                 key={index}
-                className={`text-blue-300 shadow-xl w-[40vh] bg-blue-500 rounded-xl m-3 p-3 text-4xl font-chakra ${
+                className={`text-blue-300 shadow-xl w-[40vh] bg-blue-500 rounded-xl p-3 font-chakra ${
                   selectedColor === "red"
                     ? "shadow-pink-500"
                     : selectedColor === "black"
@@ -276,7 +276,7 @@ function LeaveRoomAndSendMessage({ socket }) {
                       : selectedColor === "cyan"
                       ? "text-black"
                       : "text-pink-500"
-                  }  text-3xl font-extrabold`}
+                  } text-md md:text-3xl font-extrabold`}
                 >
                   {obj.senderName}
                 </h1>
@@ -290,8 +290,8 @@ function LeaveRoomAndSendMessage({ socket }) {
                       ? "text-black"
                       : "text-pink-500"
                   }
-                  font-bold
-                  text-3xl `}
+                  font-bold text-md
+                  md:text-3xl `}
                 >
                   {obj.message}
                 </p>

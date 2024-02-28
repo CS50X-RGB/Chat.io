@@ -54,6 +54,7 @@ export default function Header() {
         </div>
       ));
       dispatch(logout());
+      window.location.reload();
       navigate("/login");
     } catch (err) {
       toast.custom((t) => (

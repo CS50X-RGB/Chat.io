@@ -1,15 +1,15 @@
 {
   "short_name": "RohanChatApp.io",
-  "name": "Chatting App where u can chat annomously",
+  "name": "Chatting App where u can chat anonymously",
   "icons": [
     {
       "src": "favicon.ico",
       "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "type": "image/vnd.microsoft.icon"
     },
     {
       "src": "logo192.jpg",
-      "type": "image/jpg",
+      "type": "image/jpeg",
       "sizes": "192x192"
     },
     {
@@ -18,8 +18,8 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": "./index.html",
+  "start_url": "/",
   "display": "standalone",
   "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "background_color": "#93C5FD"
 }
