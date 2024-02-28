@@ -59,7 +59,7 @@ function ViewProfile() {
             <SideBar />
             <div className="p-5 flex flex-col justify-center pt-[10rem] items-center min-h-full">
               {user && (
-                <div className="bg-black min-w-[50vh] p-8 flex flex-col justify-center gap-7 items-center rounded-2xl shadow-2xl border border-pink-600 shadow-pink-600 space-y-4">
+                <div className="bg-black min-w-[40vh] p-8 flex flex-col justify-center gap-7 items-center rounded-2xl shadow-2xl border border-pink-600 shadow-pink-600 space-y-4">
                   {user.profileImage ? (
                     <span className="rounded-full border border-blue-400 h-24 w-24 overflow-hidden">
                       <img

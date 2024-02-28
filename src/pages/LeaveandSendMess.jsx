@@ -245,8 +245,7 @@ function LeaveRoomAndSendMessage({ socket }) {
             </button>
           </div>
           <div
-            className="p-4 z-20"
-            style={{ display: "flex", flexDirection: "column" }}
+            className="p-4 z-20 overflow-y-scroll flex flex-col gap-[2rem] pt-[4rem] h-[72vh] border border-[#fff6f6]"
           >
             {messageReceived.map((obj, index) => (
               <div
