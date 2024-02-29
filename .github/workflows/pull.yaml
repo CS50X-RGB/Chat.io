@@ -24,12 +24,13 @@ jobs:
                 CI=false npm run build
         working-directory: ./
 
-      - name: Commit-changes
+        - name: Commit changes
         run: |
           git config --global user.name 'CS50X-RGB'
           git config --global user.email 'rohanchatterjee866@gmail.com'
           git add .
-          git commit -m "Build new version for the production"
+          git diff-index --quiet HEAD || git commit -m "Build new version for the production"
+      
 
       - name: Push Changes
         uses: ad-m/github-push-action@master
