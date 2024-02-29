@@ -16,8 +16,8 @@ const authSlice = createSlice({
         state.token = token;
         state.isAuth = true;
 
-        Cookies.set("token", token,{secure: true ,sameSite : 'strict',httpOnly : true});
-        Cookies.set("isAuth", true ,{secure: true ,sameSite : 'strict',httpOnly : true});
+        Cookies.set("token", token,{secure: true ,sameSite : 'strict'});
+        Cookies.set("isAuth", true ,{secure: true ,sameSite : 'strict'});
       } else {
         console.error("Token not provided in login action payload.");
       }
