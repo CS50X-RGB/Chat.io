@@ -15,9 +15,13 @@ jobs:
       - name: Remove Previous build
         run: rm -rf  ./build
 
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./
+
       - name: Build app
         run: npm run build
-        working-directory: /
+        working-directory: ./
 
       - name: Commit-changes
         run: |
