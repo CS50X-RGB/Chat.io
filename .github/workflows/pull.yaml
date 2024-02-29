@@ -20,7 +20,8 @@ jobs:
         working-directory: ./
 
       - name: Build app
-        run: npm run build
+        run: |
+                CI=false npm run build
         working-directory: ./
 
       - name: Commit-changes
