@@ -9,7 +9,6 @@ import ChatRoom1 from "../assests/ChatRoom.png";
 import Join from "../assests/Join.png";
 import History from "../assests/History.png";
 import { Link } from "react-router-dom";
-import { userServer } from "../App";
 
 const TypingAnimation = ({ text, speed }) => {
   const [displayingText, setDisplayingText] = useState("");

@@ -15,6 +15,7 @@ export default function Header() {
   const [image, setImage] = useState(null);
   const [userName, setUserName] = useState("");
   const [open, setOpen] = useState(false);
+  console.log(token);
   useEffect(() => {
     if (isAuth) {
       axios

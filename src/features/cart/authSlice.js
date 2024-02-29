@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 
 const initialAuthState = {
   isAuth: Cookies.get("isAuth") === "true" || false,
-  token: Cookies.get('ChatIo_Token') && Cookies.get("isAuth") === "true" ? Cookies.get('ChatIo_Token') : null,
+  token: Cookies.get("token"),
 };
 
 const authSlice = createSlice({
@@ -13,10 +13,11 @@ const authSlice = createSlice({
     login: (state, action) => {
       const { token } = action.payload;
       if (token) {
-        state.isAuth = true;
         state.token = token;
-        Cookies.set("token", token,{secure: true ,sameSite : 'strict'});
-        Cookies.set("isAuth", true ,{secure: true ,sameSite : 'strict'});
+        state.isAuth = true;
+
+        Cookies.set("token", token,{secure: true ,sameSite : 'strict',httpOnly : true});
+        Cookies.set("isAuth", true ,{secure: true ,sameSite : 'strict',httpOnly : true});
       } else {
         console.error("Token not provided in login action payload.");
       }
