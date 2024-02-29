@@ -1,0 +1,36 @@
+name: Create new build
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Remove Previous build
+        run: rm -rf  ./build
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: /
+
+      - name: Build app
+        run: npm run build
+        working-directory: /
+
+      - name: Commit-changes
+        run: |
+          git config --global user.name 'CS50X-RGB'
+          git config --global user.email 'rohanchatterjee866@gmail.com'
+          git add .
+          git commit -m "Build new version for the production"
+
+      - name: Push Changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
