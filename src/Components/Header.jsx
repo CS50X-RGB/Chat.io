@@ -37,7 +37,7 @@ export default function Header() {
 
   const handleLogout = async () => {
     try {
-      const response = await axios.get(
+      await axios.get(
         `https://chat-ioserver.onrender.com/api/v1.1/users/logout`,
         {
           headers: {
