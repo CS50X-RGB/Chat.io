@@ -9,7 +9,6 @@ export default function SideBar() {
   const [user, setUser] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
   const { isAuth, token } = useSelector((state) => state.auth);
-  console.log(token);
   useEffect(() => {
     if (isAuth) {
       axios

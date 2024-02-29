@@ -25,7 +25,6 @@ function ViewProfile() {
               withCredentials: true,
             }
           );
-          console.log(firstResponse);
           const secondResponse = await axios.get(
             `https://chat-ioserver.onrender.com/api/v1.1/users/getUserData/${firstResponse.data._id}`,
             {
@@ -36,7 +35,6 @@ function ViewProfile() {
               withCredentials: true,
             }
           );
-          console.log(secondResponse.data);
           setUser(secondResponse.data.user);
         } catch (error) {
           console.log(error);

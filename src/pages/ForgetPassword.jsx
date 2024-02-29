@@ -20,7 +20,6 @@ export default function ForgetPassword() {
           withCredentials: true,
         }
       );
-      console.log(response.data);
       setResponse(response.data);
     } catch (error) {
       console.log(error);

@@ -10,13 +10,12 @@ import Footer from "../Components/Footer";
 
 export default function Register() {
   const dispatch = useDispatch();
-  const { isAuth,token } = useSelector((state) => state.auth);
+  const { isAuth } = useSelector((state) => state.auth);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const [image, setImage] = useState(null);
-  console.log(token);
   const handleNameChange = (e) => {
     setName(e.target.value);
   };
@@ -48,7 +47,6 @@ export default function Register() {
           withCredentials: true,
         }
       );
-      console.log(response);
       if (response && response.data) {
         toast.custom((t) => (
           <div className="border-2 border-black bg-gradient-to-tr from-blue-500 via-blue-600 to-blue-700 text-black font-chakra p-3 rounded-md">
@@ -57,10 +55,7 @@ export default function Register() {
         ));
       }
       if(response.data.success){
-        console.log(response.data.success);
-        console.log(response.data.token);
         dispatch(login({ token: response.data.token }));
-        console.log(isAuth);
         navigate("/");
       }    
     } catch (error) {

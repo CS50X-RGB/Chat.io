@@ -42,7 +42,6 @@ export default function Home() {
   const isAuth = useSelector((store) => store.auth.isAuth);
   const fadeInControls = useAnimation();
   const fadeInRef = useRef(null);
-  console.log(`${userServer}`);
   useEffect(() => {
     const handleScroll = () => {
       if (fadeInRef.current) {

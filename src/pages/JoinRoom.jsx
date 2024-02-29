@@ -19,7 +19,6 @@ const colorReducer = (state, action) => {
 const intitalState = "black";
 
 function JoinRoom({ socket }) {
-  console.log("socket hai", socket);
   const { isAuth, token } = useSelector((state) => state.auth);
   const [room, setRoom] = useState("");
   const [userProfile, setUserProfile] = useState(null);
@@ -31,7 +30,6 @@ function JoinRoom({ socket }) {
     });
   };
   const navigate = useNavigate();
-  console.log(isAuth);
   useEffect(() => {
     fetchUserProfile();
   }, []);
@@ -48,7 +46,6 @@ function JoinRoom({ socket }) {
           withCredentials: true,
         }
       );
-      console.log("user data", response.data.user);
       setUserProfile(response.data.user);
     } catch (error) {
       console.error("Error fetching user profile:", error);
@@ -72,9 +69,6 @@ function JoinRoom({ socket }) {
             withCredentials: true,
           }
         );
-
-        console.log("response aya", response);
-
         if (response && response.data) {
           toast.custom((t) => (
             <div className="border-2 border-black bg-gradient-to-tr from-green-500 via-green-600 to-green-700 text-black font-chakra p-3 rounded-md">
@@ -88,7 +82,6 @@ function JoinRoom({ socket }) {
         navigate(`/chat/${userProfile._id}/${room}`, {
           state: { selectedColor },
         });
-        console.log("Color is ", selectedColor);
       } catch (error) {
         // toast.custom((t) => (
         //   <div className="border-2 border-white bg-gradient-to-tr from-red-400 via-red-500 to-red-700 text-white font-chakra p-3 rounded-md">
@@ -107,13 +100,8 @@ function JoinRoom({ socket }) {
           ));
         }
       }
-    } else {
-      console.log(
-        "User is not authenticated. Redirect to login or show a message."
-      );
     }
   };
-  console.log("Color is ", selectedColor);
   return (
     <>
       <div className="bg-gradient-to-tr from-blue-600 to-fuchsia-500">

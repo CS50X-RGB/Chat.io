@@ -30,9 +30,6 @@ function LeaveRoomAndSendMessage({ socket }) {
           withCredentials: true,
         }
       );
-      for (let i = 0; i < response.data.content.length; i++) {
-        console.log(response.data.content[i]);
-      }
       const filteredMessages = response.data.content.filter(
         (msg) => !(msg.senderName === user.name && msg.message === message)
       );
@@ -56,7 +53,6 @@ function LeaveRoomAndSendMessage({ socket }) {
   const sendMessage = () => {
     setButtonClicked(true);
     if (message !== "" && room !== "") {
-      console.log(`Message is sent by ${user.name} && message is ${message}`);
       socket.emit("send_message", {
         message,
         room,
@@ -101,13 +97,6 @@ function LeaveRoomAndSendMessage({ socket }) {
 
   useEffect(() => {
     const handleReceivedMessage = (data) => {
-      console.log(data);
-      console.log("I am updating messageReceivedArray before", messageReceived);
-      console.log({
-        senderName: data.senderName,
-        message: data.message,
-        _id: user._id,
-      });
       setMessageReceived((prevMessages) => [
         ...prevMessages,
         {
@@ -118,7 +107,6 @@ function LeaveRoomAndSendMessage({ socket }) {
       ]);
     };
     socket.on("r-m", handleReceivedMessage);
-    console.log("I am updating messageReceivedArray after", messageReceived);
     return () => {
       socket.off("r-m", handleReceivedMessage);
     };
@@ -126,10 +114,7 @@ function LeaveRoomAndSendMessage({ socket }) {
 
   useEffect(() => {
     if (buttonClicked) {
-      console.log(buttonClicked);
       const fetchUserDataForMessages = async () => {
-        console.log("Data sent");
-        console.log(messageReceived[messageReceived.length - 1]);
         const newArray = messageReceived.filter(
           (msg) => msg.senderName !== user.name
         );
@@ -139,9 +124,7 @@ function LeaveRoomAndSendMessage({ socket }) {
         }
         try {
           if (messageReceived.length > 0) {
-            console.log(messageReceived[messageReceived.length - 1]);
             const lastMessage = messageReceived[messageReceived.length - 1];
-            console.log(Date.now());
             const response = await axios.post(
               `https://chat-ioserver.onrender.com/api/v1.1/chat/chat/${id}/${roomno}`,
               {
@@ -159,8 +142,6 @@ function LeaveRoomAndSendMessage({ socket }) {
                 withCredentials: true,
               }
             );
-            console.log(response);
-            console.log(Date.now());
             if (response && response.data) {
               toast.custom((t) => (
                 <div className="border-2 border-black bg-gradient-to-tr from-green-500 via-green-600 to-green-700 text-black font-chakra p-3 rounded-md">
@@ -169,13 +150,11 @@ function LeaveRoomAndSendMessage({ socket }) {
               ));
             }
             setButtonClicked(false);
-            console.log(`HERE ${buttonClicked}`);
           }
         } catch (error) {
           console.error("Error adding user to the database:", error);
         }
       };
-      console.log(`HERE ${buttonClicked}`);
       fetchUserDataForMessages();
     }
   }, [messageReceived,token]);
